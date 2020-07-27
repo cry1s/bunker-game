@@ -1,7 +1,7 @@
 const Constants = require('../shared/constants');
 
 class OpenChacsStage {
-    constructor(players, sockets, three) {
+    constructor(sockets, three) {
         this.finished = false;
         this.notKickedSockets = [];
         for (let playerID in this.players) {

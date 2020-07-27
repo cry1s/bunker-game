@@ -1,5 +1,7 @@
 const Constants = require('../shared/constants');
 const Player = require('./player');
+const OpenChacsStage = require('./openchacsstage');
+const e = require('express');
 
 class Room {
   static catastrofa = {};
@@ -17,7 +19,7 @@ class Room {
     this.needToKick = 1;
     this.state = Constants.ROOM_STATES.LOBBY; 
     this.gameState = null;
-    this.lastUpdateTime = Date.now();
+    this.openChacStage = null;
     this.shouldSendUpdate = true;
     this.cicles = 1;
     setInterval(this.update.bind(this), 1000 / 60);
@@ -94,10 +96,18 @@ class Room {
           });
           this.shouldSendUpdate = false;
         }
-        if (this.gameState == Constants.GAME_STATES.OPENING_CHACS) {
-
+        if (this.gameState == Constants.GAME_STATES.OPENING_CHACS && this.openChacStage == null) {
+          this.gameState = new OpenChacsStage(this.sockets, this.cicles == 1);
         }
         break;
+    }
+  }
+  openChac(socket, chac) {
+    if (this.openChacStage && this.gameState == Constants.GAME_STATES.OPENING_CHACS) {
+      const player = this.players[socket.id];
+      player.openCard(chac);
+      this.openChacStage.onChacOpen();
+      this.shouldSendUpdate = true;
     }
   }
 
