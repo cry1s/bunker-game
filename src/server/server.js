@@ -61,7 +61,6 @@ function createRoom(username) {
 }
 
 function joinRoom(username, key) {
-  console.log( key);
   if (rooms[key] != undefined && rooms[key] != rooms.n) {
     rooms[key].addPlayer(this, username);
   }
@@ -200,9 +199,10 @@ async function LoadAndSendSpreadsheetData() {
 
 function deleteRoom(key) {
   delete rooms[key];
-  console.log("Room with key "+ key + " deleted!")
+  console.log("Room with key "+ key + " deleted!");
 }
 
 function openChac(key, chac) {
-  //TODO
+  const room = rooms[key];
+  room.openChacRoom(this, chac);
 }

@@ -51,7 +51,6 @@ class Room {
     r = randomInt(0, Room.catastrofa.timeToLeave.length-1);
     this.terms += "Время пребывания - " + Room.catastrofa.timeToLeave[r] + "<br \>";
     let rooms = randomArray(Room.catastrofa.specRooms, randomInt(0,3));
-    console.log(Room.catastrofa.specRooms);
     rooms.forEach(room => {
       this.terms += room + "<br \>";
     });
@@ -86,6 +85,7 @@ class Room {
           this.sendUpdateForAll(Constants.MSG_TYPES.INIT_GAME_UPDATE, this.createInitUpdate());
           this.sendUpdateForAll(Constants.MSG_TYPES.TERMS_UPDATE, this.terms);
           this.gameState = Constants.GAME_STATES.OPENING_CHACS;
+          console.log(`Комната ${this.code} начинает игру`);
           this.state = Constants.ROOM_STATES.GAME;
         }
         break;
@@ -97,14 +97,16 @@ class Room {
           this.shouldSendUpdate = false;
         }
         if (this.gameState == Constants.GAME_STATES.OPENING_CHACS && this.openChacStage == null) {
-          this.gameState = new OpenChacsStage(this.sockets, this.cicles == 1);
+          this.openChacStage = new OpenChacsStage(this.players, this.sockets, this.cicles == 1);
         }
         break;
     }
   }
-  openChac(socket, chac) {
+
+  openChacRoom(socket, chac) {
     if (this.openChacStage && this.gameState == Constants.GAME_STATES.OPENING_CHACS) {
       const player = this.players[socket.id];
+      console.log(`Открываю характеристику ${chac} у ${socket.id}`)
       player.openCard(chac);
       this.openChacStage.onChacOpen();
       this.shouldSendUpdate = true;
@@ -172,7 +174,6 @@ class Room {
       usernames.push(this.players[playerID].username);
     });
     update.usernames = usernames;
-    console.log(update);
     return update;
   }
 

@@ -48,6 +48,11 @@ button:focus {
   font-size: 13px;
 }
 
+.chac {
+  padding: 2px;
+  text-decoration: blink;
+}
+
 #play-menu,
 #room-menu {
   position: fixed;

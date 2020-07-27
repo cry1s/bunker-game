@@ -2,7 +2,7 @@
 // https://victorzhou.com/blog/build-an-io-game-part-1/#7-client-state
 
 import { create } from "lodash";
-import { useSpeccard } from "./networking";
+import { useSpeccard, openChac } from "./networking";
 
 // The "current" state will always be RENDER_DELAY ms behind server time.
 // This makes gameplay smoother and lag less noticeable.
@@ -15,13 +15,36 @@ const gamePlayerCards = document.getElementById("game-player-cards");
 const gameTerms = document.getElementById("game-terms");
 
 const gameUpdates = [];
+
+const chacsOpened = {
+  job: false,
+  health: false,
+  bio: false,
+  hobby: false,
+  feel: false,
+  fobia: false,
+  info: false,
+  bag: false,
+};
+
+let jobOpened = false;
+let healthOpened = false;
+let bioOpened = false;
+let hobbyOpened = false;
+let feelOpened = false;
+let fobiaOpened = false;
+let infoOpened = false;
+let bagOpened = false;
+
 let me = null;
 let cicle = 0;
 let key = "";
 let amountPlayers = 0;
+let needToOpenChacs = 0;
 
 export function initGameUpdate(update) {
   console.log(update);
+  closeChacs();
   key = update.key;
   amountPlayers = update.amountPlayers;
   createPlayerCards(update.usernames);
@@ -36,25 +59,43 @@ function createPlayerCards(usernames) {
     gamePlayerCards.innerHTML += `<div id="player${playerN+1}" class="player">
     <h1 class="hidden" id="player${playerN+1}-kicked" style="text-align: center;">ИЗГНАН</h1>
     <div class="chacs" id="player${playerN+1}-chacs">
-      Профессия: *****
+      <div class="chac" id="job${playerN+1}">Профессия: *****</div>
       <hr />
-      Здоровье: *****
+      <div class="chac" id="health${playerN+1}">Здоровье: *****</div>
       <hr />
-      Биологические характеристики: *****
+      <div class="chac" id="bio${playerN+1}">Биологические характеристики: *****</div>
       <hr />
-      Хобби: *****
+      <div class="chac" id="hobby${playerN+1}">Хобби: *****</div>
       <hr />
-      Человеческое качество: *****
+      <div class="chac" id="feel${playerN+1}">Человеческое качество: *****</div>
       <hr />
-      Фобия: *****
+      <div class="chac" id="fobia${playerN+1}">Фобия: *****</div>
       <hr />
-      Доп. информация: *****
+      <div class="chac" id="info${playerN+1}">Доп. информация: *****</div>
       <hr />
-      Багаж: *****</div>
+      <div class="chac" id="bag${playerN+1}">Багаж: *****</div>
+    </div>
     <button class="hidden" id="player${playerN+1}-vote-button" style="background-color: red;">ГОЛОСОВАТЬ ПРОТИВ</button>
     <h4>#${playerN+1} ${usernames[playerN]}</h4>
     </div>`;
   }
+}
+
+function closeChacs() {
+  for (let chac in chacsOpened) {
+    chacsOpened[chac] = false;
+  }
+}
+
+function setColorsForChacs() {
+  document.getElementById(`job${me}`).style.backgroundColor = chacsOpened.job ? "yellow" : "skyblue";
+  document.getElementById(`health${me}`).style.backgroundColor = chacsOpened.health ? "yellow" : "skyblue";
+  document.getElementById(`bio${me}`).style.backgroundColor = chacsOpened.bio ? "yellow" : "skyblue";
+  document.getElementById(`hobby${me}`).style.backgroundColor = chacsOpened.hobby ? "yellow" : "skyblue";
+  document.getElementById(`feel${me}`).style.backgroundColor = chacsOpened.feel ? "yellow" : "skyblue";
+  document.getElementById(`fobia${me}`).style.backgroundColor = chacsOpened.fobia ? "yellow" : "skyblue";
+  document.getElementById(`info${me}`).style.backgroundColor = chacsOpened.info ? "yellow" : "skyblue";
+  document.getElementById(`bag${me}`).style.backgroundColor = chacsOpened.bag ? "yellow" : "skyblue";
 }
 
 export function termsUpdate(terms) {
@@ -70,26 +111,22 @@ export function processGameUpdate(update) {
     const playerUpdate = update[playerN+1];
     if (playerUpdate.me) {
       me = playerN+1;
+      setColorsForChacs();
     }
-    playerChacs.innerHTML = `Профессия: ${playerUpdate.job}
-    <hr />
-    Здоровье: ${playerUpdate.health}
-    <hr />
-    Биологические характеристики: ${playerUpdate.bio}
-    <hr />
-    Хобби: ${playerUpdate.hobby}
-    <hr />
-    Человеческое качество: ${playerUpdate.feel}
-    <hr />
-    Фобия: ${playerUpdate.fobia}
-    <hr />
-    Доп. информация: ${playerUpdate.info}
-    <hr />
-    Багаж: ${playerUpdate.bag}`
+    document.getElementById(`job${playerN+1}`).innerHTML = `Профессия: ${playerUpdate.job}`;
+    document.getElementById(`health${playerN+1}`).innerHTML = `Здоровье: ${playerUpdate.health}`;
+    document.getElementById(`bio${playerN+1}`).innerHTML = `Биологические характеристики: ${playerUpdate.bio}`;
+    document.getElementById(`hobby${playerN+1}`).innerHTML = `Хобби: ${playerUpdate.hobby}`;
+    document.getElementById(`feel${playerN+1}`).innerHTML = `Человеческое качество: ${playerUpdate.feel}`;
+    document.getElementById(`fobia${playerN+1}`).innerHTML = `Фобия: ${playerUpdate.fobia}`;
+    document.getElementById(`info${playerN+1}`).innerHTML = `Доп. информация: ${playerUpdate.info}`;
+    document.getElementById(`bag${playerN+1}`).innerHTML = `Багаж: ${playerUpdate.bag}`;
     if (playerUpdate.kicked) {
       playerKickedText.classList.remove("hidden");
+      playerChacs.classList.add("hidden");
     } else {
       playerKickedText.classList.add("hidden");
+      playerChacs.classList.remove("hidden");
     }
   }
   let speccardN = 0;
@@ -102,4 +139,37 @@ export function processGameUpdate(update) {
       button.innerHTML = update.speccards[id].text;
     }
   }
+}
+
+export function chacOpenProcStart(needToOpen) {
+  needToOpenChacs = needToOpen;
+  if (needToOpenChacs == 3) {
+    localOpenChac("job")
+  }
+  document.getElementById(`health${me}`).onclick = chacsOpened.health ? "" : () => localOpenChac("health");
+  document.getElementById(`bio${me}`).onclick = chacsOpened.bio ? "" : () => localOpenChac("bio"); 
+  document.getElementById(`hobby${me}`).onclick = chacsOpened.hobby ? "" : () => localOpenChac("hobby");
+  document.getElementById(`feel${me}`).onclick = chacsOpened.feel ? "" : () => localOpenChac("feel");
+  document.getElementById(`fobia${me}`).onclick = chacsOpened.fobia ? "" : () => localOpenChac("fobia");
+  document.getElementById(`info${me}`).onclick = chacsOpened.info ? "" : () => localOpenChac("info");
+  document.getElementById(`bag${me}`).onclick = chacsOpened.bag ? "" : () => localOpenChac("bag");
+}
+
+function localOpenChac(chac) {
+  chacsOpened[chac] = true;
+  needToOpenChacs--;
+  openChac(key, chac);
+  if (!needToOpenChacs) {
+    chacOpenProcEnd();
+  }
+}
+
+function chacOpenProcEnd() {
+  document.getElementById(`health${me}`).onclick = null;
+  document.getElementById(`bio${me}`).onclick = null;
+  document.getElementById(`hobby${me}`).onclick = null;
+  document.getElementById(`feel${me}`).onclick = null;
+  document.getElementById(`fobia${me}`).onclick = null;
+  document.getElementById(`info${me}`).onclick = null;
+  document.getElementById(`bag${me}`).onclick = null;
 }

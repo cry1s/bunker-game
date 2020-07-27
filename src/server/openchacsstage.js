@@ -1,11 +1,11 @@
 const Constants = require('../shared/constants');
 
 class OpenChacsStage {
-    constructor(sockets, three) {
+    constructor(players, sockets, three) {
         this.finished = false;
         this.notKickedSockets = [];
-        for (let playerID in this.players) {
-            if (!this.players[playerID].kicked) {
+        for (let playerID in sockets) {
+            if (!players[playerID].kicked) {
                 this.notKickedSockets.push(sockets[playerID]);
             }
         }
@@ -23,7 +23,7 @@ class OpenChacsStage {
 
     onChacOpen() {
         this.needToOpen--;
-        if (this.needToOpen >= 0) {
+        if (this.needToOpen <= 0) {
             this.currentPlayerNumber++;
             if (this.currentPlayerNumber == this.amountOfPlayers) {
                 this.finished = true;

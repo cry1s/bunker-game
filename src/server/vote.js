@@ -46,7 +46,6 @@ class Elections {
             } 
         }
     }
-
 }
 
 module.exports = Elections;
