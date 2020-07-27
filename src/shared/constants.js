@@ -4,18 +4,43 @@ module.exports = Object.freeze({
   PLAYER_SPEED: 400,
   PLAYER_FIRE_COOLDOWN: 0.25,
 
-  BULLET_RADIUS: 3,
-  BULLET_SPEED: 800,
-  BULLET_DAMAGE: 10,
-
-  SCORE_BULLET_HIT: 20,
-  SCORE_PER_SECOND: 1,
-
-  MAP_SIZE: 3000,
+  GOOGLE_SPREADSHEET_ID: '1rRKfvFjzKkI5rT6Q7vPANhn1NTAZ-7mPaCmoxgtmVu4',
   MSG_TYPES: {
-    JOIN_GAME: 'join_game',
+    JOIN_ROOM: 'join_room',
+    LEAVE_ROOM: 'leave_room',
+    CREATE_ROOM: 'create_room',
+    PLAYER_READY: 'player_ready',
+
+    LOBBY_UPDATE: 'lobby_update',
+    TERMS_UPDATE: 'terms_update',
+    INIT_GAME_UPDATE: '',
     GAME_UPDATE: 'update',
-    INPUT: 'input',
+    CHAT_UPDATE: 'chat_update',
+    PLAYER_VOTE_STARTED: 'PLAYER_START_VOTE',
+    CHANGE_VOTE_STARTED: 'CHANGE_VOTE_STARTED',
+    CHAC_OPEN_PROCESS_STARTED: 'CHAC_OPEN_PROCESS_START',
     GAME_OVER: 'dead',
+
+    SEND_CHAT_MESSAGE: 'SEND_CHAT_MESSAGE',
+    OPEN_CHAC: "OPEN_CHAC",
+    PLAYER_VOTE: 'PLAYER_END_VOTE',
+    USE_SPECCARD: 'USE_SPECCARD',
   },
+
+  ROOM_STATES: {
+    LOBBY: 1,
+    GAME: 2,
+    RESULTS: 3,
+  },
+
+  ELECTIONS_STATES: {
+    IN_PROGRESS: 4,
+    FINISHED: 5,
+  },
+
+  GAME_STATES: {
+    OPENING_CHACS: 6,
+    ELECTION: 7,
+    JUSTIFICATION: 8,
+  }
 });

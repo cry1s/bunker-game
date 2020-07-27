@@ -1,13 +1,13 @@
 // Learn more about this file at:
 // https://victorzhou.com/blog/build-an-io-game-part-1/#4-client-networking
 import io from 'socket.io-client';
-import { throttle } from 'throttle-debounce';
-import { processGameUpdate } from './state';
+import { processGameUpdate, initGameUpdate, termsUpdate } from './gamestate';
+import { lobbyUpdate } from './lobbystate';
 
 const Constants = require('../shared/constants');
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
-const socket = io(`${socketProtocol}://${window.location.host}`, { reconnection: false });
+const socket = io(`${socketProtocol}://${window.location.host}`, { reconnection: true });
 const connectedPromise = new Promise(resolve => {
   socket.on('connect', () => {
     console.log('Connected to server!');
@@ -18,6 +18,9 @@ const connectedPromise = new Promise(resolve => {
 export const connect = onGameOver => (
   connectedPromise.then(() => {
     // Register callbacks
+    socket.on(Constants.MSG_TYPES.LOBBY_UPDATE, lobbyUpdate);
+    socket.on(Constants.MSG_TYPES.INIT_GAME_UPDATE, initGameUpdate)
+    socket.on(Constants.MSG_TYPES.TERMS_UPDATE, termsUpdate)
     socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate);
     socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver);
     socket.on('disconnect', () => {
@@ -30,10 +33,22 @@ export const connect = onGameOver => (
   })
 );
 
-export const play = username => {
-  socket.emit(Constants.MSG_TYPES.JOIN_GAME, username);
+export const joinRoom = (username, room_code) => {
+  socket.emit(Constants.MSG_TYPES.JOIN_ROOM, username, room_code);
 };
 
-export const updateDirection = throttle(20, dir => {
-  socket.emit(Constants.MSG_TYPES.INPUT, dir);
-});
+export const createRoom = (username) => {
+  socket.emit(Constants.MSG_TYPES.CREATE_ROOM, username)
+};
+
+export const leaveRoom = (key) => {
+  socket.emit(Constants.MSG_TYPES.LEAVE_ROOM, key)
+};
+
+export const switchReady = (key) => {
+  socket.emit(Constants.MSG_TYPES.PLAYER_READY, key)
+}
+
+export const useSpeccard = (key, id) => {
+  socket.emit(Constants.MSG_TYPES.USE_SPECCARD, key, id)
+}

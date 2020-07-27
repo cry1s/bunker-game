@@ -1,16 +1,138 @@
-const ObjectClass = require('./object');
-const Bullet = require('./bullet');
 const Constants = require('../shared/constants');
+const {
+  fromPairs,
+  random
+} = require('lodash');
 
-class Player extends ObjectClass {
-  constructor(id, username, x, y) {
-    super(id, x, y, Math.random() * 2 * Math.PI, Constants.PLAYER_SPEED);
-    this.username = username;
-    this.hp = Constants.PLAYER_MAX_HP;
-    this.fireCooldown = 0;
-    this.score = 0;
+class Player {
+  constructor(socketId, username, deck) {
+    this.socketId = socketId;
+    this.username = "";
+    if (username) {
+      this.username = username;
+    } else {
+      this.username = socketId;
+    }
+    this.kicked = false;
+    this.ready = false;
+
+    this.sex = null;          //
+    this.orientation = null;  // Sum of = this.bio
+    this.age = null;          //
+
+    this.bio = null;          // Objects like
+    this.job = null;          // {
+    this.health = null;       //  "id": 17,
+    this.hobby = null;        //  "text": "some card text",
+    this.feel = null;         //  "isOpen": true/false;
+    this.fobia = null;
+    this.info = null;         // }
+    this.bag = null;          // I'm so sorry for not having Class
+    this.speccards = null;    // for tasks like this.
+
+    this.giveStartCards(deck);
   }
 
+  giveStartCards(deck) {
+    this.makeBioCard();
+    this.giveRandomCard(deck.jobs, "job");
+    this.giveRandomCard(deck.healths, "health");
+    this.giveRandomCard(deck.hobbies, "hobby");
+    this.giveRandomCard(deck.feels, "feel");
+    this.giveRandomCard(deck.fobies, "fobia");
+    this.giveRandomCard(deck.infos, "info");
+    this.giveRandomCard(deck.bags, "bag");
+    this.giveRandomCard(deck.speccards, "speccards");
+    this.giveRandomSpecCards(deck.speccards);
+  }
+
+  openCard(chac) {
+    this[chac].isOpen = true;
+  }
+
+  vote(voteo, enemyID) {
+    voteo
+  }
+
+  returnToGame() {
+    this.kicked = false;
+  }
+
+  tradeCardWithPlayer(player, chac) {
+    player.openCard(chac);
+    this.openCard(chac);
+    let myCard = this[chac];
+    this[chac] = player[chac];
+    player[chac] = myCard;
+  }
+
+  retakeCard(deckSection, chac) {
+    let cardBackToDeck = this[chac];
+    this.giveRandomCard(deckSection, chac);
+    this[chac].isOpen = cardBackToDeck.isOpen;
+    deckSection[cardBackToDeck.id] = cardBackToDeck.text;
+  }
+
+  giveRandomSpecCards(deckSpeccardSection) {
+    let n = this.randomInt(0, Object.keys(deckSpeccardSection).length);
+    while (deckSpeccardSection[n] === undefined) {
+      n = this.randomInt(0, Object.keys(deckSpeccardSection).length);
+    }
+    this.speccards = {
+      "text1": deckSpeccardSection[n],
+      "id1": n,
+      "used1": false,
+    };
+    delete deckSpeccardSection[n];
+    while (deckSpeccardSection[n] === undefined) {
+      n = this.randomInt(0, Object.keys(deckSpeccardSection).length);
+    }
+    this.speccards.id2 = n;
+    this.speccards.text2 = deckSpeccardSection[n];
+    this.speccards.used2 = false;
+    delete deckSpeccardSection[n];
+  }
+
+  giveRandomCard(oTypeCards, keyToWrite) {
+    let n = this.randomInt(0, Object.keys(oTypeCards).length);
+    while (oTypeCards[n] === undefined) {
+      n = this.randomInt(0, Object.keys(oTypeCards).length);
+    }
+    this[keyToWrite] = {
+      "text": oTypeCards[n],
+      "id": n,
+      "isOpen": false,
+    };
+    delete oTypeCards[n];
+  }
+
+  genSexOrientAge() {
+    this.sex = Math.random() > 0.5 ? "Мужчина" : "Женщина";
+    switch (this.randomInt(1, 3)) {
+      case 2:
+        this.orientation = "Бисексуал";
+        break;
+      case 3:
+        this.orientation = this.sex == "Мужчина" ? "Гомо" : "Лесби";
+        break;
+    }
+    this.age = this.randomInt(18, 86);
+  }
+
+  makeBioCard() {
+    this.genSexOrientAge();
+    let text = this.sex;
+    if (this.orientation) text += "-" + this.orientation;
+    text += (" " + this.age + " лет");
+
+    let isOpen = this.bio === null ? false : this.bio.isOpen;
+
+    this.bio = {
+      text,
+      "id": null,
+      isOpen,
+    };
+  }
   // Returns a newly created bullet, or null.
   update(dt) {
     super.update(dt);
@@ -32,20 +154,21 @@ class Player extends ObjectClass {
     return null;
   }
 
-  takeBulletDamage() {
-    this.hp -= Constants.BULLET_DAMAGE;
-  }
-
-  onDealtDamage() {
-    this.score += Constants.SCORE_BULLET_HIT;
-  }
-
   serializeForUpdate() {
     return {
-      ...(super.serializeForUpdate()),
       direction: this.direction,
       hp: this.hp,
     };
+  }
+
+  randomInt(min, max) {
+    // получить случайное число от (min-0.5) до (max+0.5)
+    let rand = min - 0.5 + Math.random() * (max - min + 1);
+    return Math.round(rand);
+  }
+
+  switchReady() {
+    this.ready = !this.ready;
   }
 }
 

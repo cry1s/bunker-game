@@ -6,10 +6,14 @@ html, body {
   background-color: black;
 }
 
+
+h2, h4 {
+  text-align: center;
+}
 hr {
   border: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
-  margin: 1rem 0;
+  margin: 0;
   width: 100%;
 }
 
@@ -36,12 +40,16 @@ button:focus {
   display: none !important;
 }
 
-#game-canvas {
-  width: 100%;
-  height: 100%;
+.chacs {
+  border: none;
+  background: #DCDCDC;
+  float: left;
+  text-align: start;
+  font-size: 13px;
 }
 
-#play-menu {
+#play-menu,
+#room-menu {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -55,11 +63,56 @@ button:focus {
   text-align: center;
 }
 
-#play-menu p {
+#play-menu p,
+#room-menu p {
   margin-bottom: 0;
 }
 
-#play-menu input {
+#game {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#game-utils {
+  overflow: auto;
+  background: #40E0D0;
+  margin: auto auto;
+  float: right;
+  width: 20%;
+  height: 100%;
+  overflow-y: auto;
+  bottom: 0;
+}
+
+#game-terms {
+  height: 20rem;
+  overflow: auto;
+  border-style: solid;
+  border-color: crimson;
+  border-width: 1rem;
+}
+
+#game-chat {
+  height: fit-content;
+  overflow: auto;
+}
+
+#game-spec-cards {
+  height: 25%;
+}
+
+#game-smart-button {
+  height: 25%;
+  float: bottom;
+}
+
+#play-menu input,
+#room-menu input {
   font-size: 18px;
   outline: none;
   border: none;
@@ -69,27 +122,9 @@ button:focus {
   text-align: center;
 }
 
-#play-menu input:hover {
+#play-menu input:hover,
+#room-menu input:hover {
   outline: none;
-}
-
-#leaderboard {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  background-color: rgba(255, 255, 255, 0.5);
-  padding: 10px;
-  border-radius: 5px;
-}
-
-#leaderboard th {
-  text-align: center;
-  padding: 2px 5px;
-}
-
-#leaderboard td {
-  text-align: center;
-  padding: 2px 5px;
 }
 
 #disconnect-modal {
@@ -110,6 +145,35 @@ button:focus {
   background-color: white;
   border-radius: 5px;
   text-align: center;
+}
+
+#game-player-cards {
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: #FFD700;
+  width: 80%;
+  float: left;
+  overflow: auto;
+}
+
+.player {
+  height: fit-content;
+  width: fit-content;
+  float: left;
+  margin-top: 1%;
+  margin-left: 1.2%;
+  margin-bottom: 10%;
+  text-align: start;
+  border: solid;
+}
+
+#info {
+  font-size: 12px;
+  margin-left: 5%;
+  margin-top: 5%;
 }
 
 @media screen and (max-width: 640px) {

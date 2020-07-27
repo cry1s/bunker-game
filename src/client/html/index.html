@@ -1,35 +1,103 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>An example .io game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="shortcut icon" href="/assets/icon64.png">
-  <meta property="description" content="A complete example multiplayer .io web game implemented from scratch. Built with Javascript and Node.js. Open source on Github.">
+  <meta property="description"
+    content="A complete example multiplayer .io web game implemented from scratch. Built with Javascript and Node.js. Open source on Github.">
   <meta property="og:title" content="An example .io game">
-  <meta property="og:description" content="A complete example multiplayer .io web game implemented from scratch. Built with Javascript and Node.js. Open source on Github.">
+  <meta property="og:description"
+    content="A complete example multiplayer .io web game implemented from scratch. Built with Javascript and Node.js. Open source on Github.">
   <meta property="og:image" content="/assets/icon1200.png">
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-58664433-3"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
     gtag('js', new Date());
 
     gtag('config', 'UA-58664433-3');
   </script>
 </head>
+
 <body>
-  <canvas id="game-canvas"></canvas>
+  <div id="game">
+    <div id="game-player-cards">
+      <div id="player1" class="player">
+        <h1 class="hidden" id="player1-kicked" style="text-align: center;">ИЗГНАН</h1>
+        <div class="chacs" id="player1-chacs">
+          <font style="background-color: orange;">Профессия: Журналист</font>
+          <hr />
+          Здоровье: Мигрень
+          <hr />
+          Биологические характеристики: Мужчина, 25 лет
+          <hr />
+          Хобби: Любительская радиосвязь
+          <hr />
+          Человеческое качество: Конфликтный
+          <hr />
+          Фобия: Паразитофобия — боязнь насекомых-паразитов
+          <hr />
+          Доп. информация: 5 раз читал Гарри Поттера
+          <hr />
+          Багаж: Химические средства от насекомых</div>
+        <button class="hidden" id="player1-vote-button" style="background-color: red;">ГОЛОСОВАТЬ ПРОТИВ</button>
+        <h4>#1 NICKNAMEssss</h4>
+      </div>
+    </div>
+    <div id="game-utils">
+      <div id="game-terms">
+        <p style="margin: 3%; font-size: small;">
+          Зомби-вирус
+          Прогрессирующее во времени и пространстве распространение инфекционного заболевания среди людей, способное стать источником чрезвычайной ситуации.
+          Люди теперь Зомби. Но после выхода из бункера малая часть Зомби бродит по Земле, которая неизбежно погибнет. Остаток здорового населения 15%<br \>
+          <br \>
+          Информация о бункере:<br \>
+          Вместимость бункера—6 чел.<br \>
+          Площадь бункера — 150 м2<br \>
+          Время пребывания — 90 дней<br \>
+          Спальные места и все необходимое для поддержания гигиены<br \>
+          Запас питьевой воды и продовольствия на время нахождения в бункере<br \>
+          Кухня-столовая<br \>
+          Оборудованная теплица 30м2<br \>
+          Книги по технологии строительства<br \>
+          Аптечка первой помощи (3 шт)<br \>
+        </p>
+      </div>
+      <div id="game-chat">
+        <textarea readonly class="messages" style="width: 100%" rows="10">Чат. Напишите что-нибудь!</textarea>
+        <p>
+          <input type="text" name="message" id="message" style="width: 70%;" />
+          <input type="button" value="Отправить" style="width: 30%; float: right;" onclick="" />
+        </p>
+      </div>
+      <hr />
+      <div id="game-spec-cards">
+        <h2>СПЕЦКАРТЫ</h2>
+        <p>
+        <button id="speccard1">Рядом с вами второй бункер, где находятся два химика</button>
+        <button id="speccard2">Ты можешь поменять свою карту Профессия на новую из колоды</button>
+      </p>
+      </div>
+      <div id="game-smart-button">game-smart-button</div>
+    </div>
+  </div>
   <div id="play-menu" class="hidden">
-    <h1>An example .io game</h1>
+    <h1>Бункер</h1>
     <p>
-      Stay alive and shoot other players.
+      Автоматизированный ведущий.
       <br />
-      Use your mouse to move.
+      ок
     </p>
     <hr />
     <p>
       <!-- <br /> -->
-      Read the tutorial: <a href="https://victorzhou.com/blog/build-an-io-game-part-1/" target="_blank">How to Build an .io Game</a>.
+      Read the tutorial: <a href="https://victorzhou.com/blog/build-an-io-game-part-1/" target="_blank">How to Build an
+        .io Game</a>.
       <br />
       See the source code on <a href="https://github.com/vzhou842/example-.io-game" target="_blank">Github</a>.
       <br />
@@ -37,27 +105,29 @@
     </p>
     <hr />
     <input type="text" id="username-input" placeholder="Username" />
-    <button id="play-button">PLAY</button>
+    <input type="text" id="room-code-input" placeholder="Room" />
+    <button id="join-room-button">JOIN ROOM</button>
+    <button id="create-room-button">CREATE ROOM</button>
+
   </div>
-  <div id="leaderboard" class="hidden">
-    <table>
-      <tr>
-        <th>Username</th>
-        <th>Score</th>
-      </tr>
-      <tr><td></td><td></td></tr>
-      <tr><td></td><td></td></tr>
-      <tr><td></td><td></td></tr>
-      <tr><td></td><td></td></tr>
-      <tr><td></td><td></td></tr>
-    </table>
+  <div id="room-menu" class="hidden">
+    <h1 id="room-number">Бункер №</h1>
+    <p id="room-players">
+      Игроки:
+    </p>
+    <hr />
+    <button id="room-ready-button">READY</button>
+    <hr />
+    <button id="leave-room-button" value="">LEAVE ROOM</button>
   </div>
   <div id="disconnect-modal" class="hidden">
     <div>
-      <h2>Disconnected from Server </h2>
+      <h2>Отлючен от сервера</h2>
       <hr />
       <button id="reconnect-button">RECONNECT</button>
     </div>
   </div>
+
 </body>
+
 </html>

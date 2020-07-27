@@ -87,3 +87,4 @@ typings/
 # Added by me
 .DS_Store
 dist/
+src/server/BunkerGame-bcc41d95122e.json
