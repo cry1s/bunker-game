@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "bunkergame-283409",
+  "private_key_id": "bcc41d95122e9301ac833820aa1758ad3cd8a125",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDT0GMNW2yNLJPG\n6RKlDkbZPIwi8zKzLylo2DtiL3RpSTRIAm62GWgUOzrgG7LvVjWDia5d9bhD4SZh\nAZwWZE8ks73b/r7pA+osOo6U2xKhiqwn38m4UloEjPA2BJJHm9t6UwhNL6kjxKzr\nTiHRznrolEfbH/TkGK9/aDPsmKi3RouCk4y4a8Dv1yVEIJqd37tq+ITBderqzGQ3\njbfWmQZYfQy+aCp0MelCq3rYcQfjIWDSQykiuNPIpqvf1/bum+9oPyzKIbn+FGHh\nsYOahSBppBgF8vG+24g6PbUQmNGIdVWSMo1MqQj0G9MT4fdGH7VJ52pjyEvIRotQ\nc/xHts9xAgMBAAECggEAB0XTNNj0BffnHhAQKBMwqxJZZHTRw5XFt/get90Vw+yz\nyxosR3vhVzp+Z8YDs5ST80+FqWu/tzLyoKePvrQUhJfYV8asMu+DuZ+MGD/aaKoM\nhbT5JedL+HaHY+9tv2AyXcWelhniFpyQ7GZrIltS3IwE2JkFDVTsp7UB/WhzeJF3\nR8Uj9MlREDgbtM+STrwPUBSDer262IoZwV8KCF4lHAxaNZR2t+N/HyMmF1yt9Nep\niRJW8Kend7ktzMcXly2zTJLQqtzmOhOaDMbaDL//JNWcVUy3RlA41+A3sIG5vCdU\n3x27Pih0v0UasAyJp/CYcpTiv3BrYjlsfKLnvNrXgQKBgQDtophxSGXN2xhLiurv\n53xijnJH8AVfOp6M48nNQhK3OXb018Ox+YwtNa2n5kPr/GvnH3+5rjnRxp0AQX16\ncHlXQaBvOzcmcYVL3cwN8QMAU1NupmnC+O8gngWKntF7argdSXxXAE7F2u9IIQlO\n83OpbPFYPleeZpH0wMwl2ROR4QKBgQDkLvFiCYSsLD826AVU5hIdCJI7pshG8YPJ\nHBnDV391EX116DcqT5AW7xGmZ90nGsV5KOTwGHpUXAJjA03JvKT4w2AdIRGH3Mho\nw8W9JuaQR2AzLnDM0WoDFmy3xaljf1BJcKj5eZR+AMKEuyH0sLoqgLAufmKtBiV5\n22gzSrUPkQKBgQCcwgWNtRRzF3SPYLRaTXngCdeZXNwuVZ0Bk8IrhMqT03SFT0/o\nt5WgvSgw+dUUdw83B7BZ7HR3zW0EHi+H9WoWBVSwC3/1/CzSPx28lKBGNrFy7JQX\n6d7UxWkiaGIH5/5MU42SVsGgAyyViDV7v10tBpCuhXGHLGJb8lK5JNmkAQKBgQCP\n9NWwZhTfkmKnPyXt8+BFlNy86XG84C2mOSY/yPnOX6RpOIFlHiDndxgJhclOHGOt\nFpGor6ithAa1dKYkufDSSGBgwDYRIscE4U3lEZ+wMneMkqXzccKSBBm+ruM4tF9w\nlbTk/0EhZVVS68R2XPB2VA3Sp0WVpyUJhdRtV5p3IQKBgQDVgMj4PJypIcmZQ5pn\n43pnZWI3y8doFIH16jQrzPPkaTizJ7CdptKFIV9YzAZPfEt5UD6VKRQ6RxO3tOo2\nLUgQnaQ2OR+kO50kjN/tDh0iFQ5WC/ucUwTq8P+X1flHnrtd5uOTrjwmPpuJHeET\nIs452qosjq7yHuBs/acuVn1rFQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "idk-664@bunkergame-283409.iam.gserviceaccount.com",
+  "client_id": "101972828737754146897",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/idk-664%40bunkergame-283409.iam.gserviceaccount.com"
+}
