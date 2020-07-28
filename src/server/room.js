@@ -1,7 +1,7 @@
 const Constants = require('../shared/constants');
 const Player = require('./player');
 const OpenChacsStage = require('./openchacsstage');
-const e = require('express');
+const ElectionStage = require('./electionstage');
 
 class Room {
   static catastrofa = {};
@@ -20,6 +20,7 @@ class Room {
     this.state = Constants.ROOM_STATES.LOBBY; 
     this.gameState = null;
     this.openChacStage = null;
+    this.electionStage = null;
     this.shouldSendUpdate = true;
     this.cicles = 1;
     setInterval(this.update.bind(this), 1000 / 60);
@@ -98,6 +99,21 @@ class Room {
         }
         if (this.gameState == Constants.GAME_STATES.OPENING_CHACS && this.openChacStage == null) {
           this.openChacStage = new OpenChacsStage(this.players, this.sockets, this.cicles == 1);
+        } else if (this.gameState == Constants.GAME_STATES.OPENING_CHACS && this.openChacStage != null) {
+          if (this.openChacStage.finished) {
+            this.gameState = Constants.GAME_STATES.ELECTION;
+            this.openChacStage = null;
+            this.electionStage = new ElectionStage(this.players, this.sockets, this.needToKick);
+          }
+        } else if (this.gameState == Constants.GAME_STATES.ELECTION) {
+          if (this.electionStage.finished) {
+            const kicked = this.electionStage.getResult();
+            this.needToKick -= kicked - 1;
+            this.amountPlayers -= kicked;
+            if (this.amountPlayers <= this.amountPlayersToEnd) {
+              this.state = Constants.ROOM_STATES.RESULTS;
+            }
+          }
         }
         break;
     }

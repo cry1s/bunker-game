@@ -26,6 +26,8 @@ module.exports = Object.freeze({
     OPEN_CHAC: "OPEN_CHAC",
     PLAYER_VOTE: 'PLAYER_VOTE',
     USE_SPECCARD: 'USE_SPECCARD',
+
+    DIALOG_MESSAGE: 'DIALOG_MESSAGE',
   },
 
   ROOM_STATES: {

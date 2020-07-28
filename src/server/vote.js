@@ -8,7 +8,9 @@ class Elections {
         this.losersID = [];
         this.state = Constants.ELECTIONS_STATES.IN_PROGRESS;
         for (let key in this.players) {
+            const username = this.players[key].username;
             this.players[key] = {
+                username,
                 voted: false,
                 voices: 0,
             }
@@ -34,6 +36,7 @@ class Elections {
     }
 
     determineLosers() {
+        this.losersID = [];
         let curMaxVotes = -1;
         for (const playerID in this.players) {
             const player = this.players[playerID];
@@ -45,6 +48,15 @@ class Elections {
                 this.losersID.push(playerID);
             } 
         }
+    }
+
+    toString() {
+        let result = "";
+        Object.keys(this.players).forEach(key => {
+            const player = this.players[key];
+            result += player.username + " - " + player.voices + "<br />\n"
+        })
+        return result;
     }
 }
 
