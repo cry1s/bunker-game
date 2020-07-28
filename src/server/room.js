@@ -11,11 +11,11 @@ class Room {
     this.code = code;
     this.sockets = {};
     this.players = {};
+    this.playersArr = [];
     this.amountPlayers = 0;
     this.amountPlayersToEnd = 0;
     this.terms = "";
     this.deck = JSON.parse(JSON.stringify(Room.cards));
-
     this.needToKick = 1;
     this.state = Constants.ROOM_STATES.LOBBY; 
     this.gameState = null;
@@ -86,6 +86,10 @@ class Room {
           this.sendUpdateForAll(Constants.MSG_TYPES.INIT_GAME_UPDATE, this.createInitUpdate());
           this.sendUpdateForAll(Constants.MSG_TYPES.TERMS_UPDATE, this.terms);
           this.gameState = Constants.GAME_STATES.OPENING_CHACS;
+          for (const key in this.players) {
+            const player = this.players[key];
+            this.playersArr.push(player);
+          }
           console.log(`Комната ${this.code} начинает игру`);
           this.state = Constants.ROOM_STATES.GAME;
         }
@@ -107,11 +111,15 @@ class Room {
           }
         } else if (this.gameState == Constants.GAME_STATES.ELECTION) {
           if (this.electionStage.finished) {
+            this.shouldSendUpdate = true;
+            this.cicles++;
             const kicked = this.electionStage.getResult();
             this.needToKick -= kicked - 1;
             this.amountPlayers -= kicked;
             if (this.amountPlayers <= this.amountPlayersToEnd) {
               this.state = Constants.ROOM_STATES.RESULTS;
+            } else {
+              this.gameState = Constants.GAME_STATES.OPENING_CHACS;
             }
           }
         }
@@ -127,6 +135,12 @@ class Room {
       this.openChacStage.onChacOpen();
       this.shouldSendUpdate = true;
     }
+  }
+
+  vote(socket, vote){
+    if (this.electionStage) {
+      this.electionStage.onVote(socket.id, this.playersArr[vote].socketId);
+    }    
   }
 
   isAllPlayersReady() {

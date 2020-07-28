@@ -70,10 +70,10 @@
         </p>
       </div>
       <div id="game-chat">
-        <textarea readonly class="messages" style="width: 100%" rows="10">Чат. Напишите что-нибудь!</textarea>
+        <textarea readonly id="messages" class="messages" style="width: 100%" rows="10"></textarea>
         <p>
           <input type="text" name="message" id="message" style="width: 70%;" />
-          <input type="button" value="Отправить" style="width: 30%; float: right;" onclick="" />
+          <input value="Отправить" type="button" id="send-button" style="width: 30%; float: right;" />
         </p>
       </div>
       <hr />
@@ -128,7 +128,12 @@
       <button id="reconnect-button">RECONNECT</button>
     </div>
   </div>
-
+  <div id="dialog" class="hidden">
+    <p id="dialog-message">
+    </p>
+    <hr />
+    <button id="dialog-close-button">Закрыть</button>
+  </div>
 </body>
 
 </html>

@@ -21,7 +21,7 @@ class Elections {
     vote(voterID, enemyID) {
         if (this.players[voterID].voted) {
             this.players[voterID].voted = false;
-            this.players[this.players[voterID].voted].voices--;
+            this.players[voterID].voices--;
             this.vote(voterID, enemyID);
         } else {
             this.players[voterID].voted = enemyID;

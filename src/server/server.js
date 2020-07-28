@@ -8,6 +8,9 @@ const Constants = require('../shared/constants');
 const Room = require('./room');
 const webpackConfig = require('../../webpack.dev.js');
 
+// Get values for players chars
+LoadAndSendSpreadsheetData();
+
 // Setup an Express server
 const app = express();
 app.use(express.static('public'));
@@ -37,11 +40,11 @@ io.on('connection', socket => {
   socket.on(Constants.MSG_TYPES.LEAVE_ROOM, leaveRoom);
   socket.on(Constants.MSG_TYPES.PLAYER_READY, switchReady)
   socket.on(Constants.MSG_TYPES.OPEN_CHAC, openChac)
+  socket.on(Constants.MSG_TYPES.PLAYER_VOTE, playerVote)
   socket.on('disconnect', onDisconnect);
 });
 
-// Get values for players chars
-LoadAndSendSpreadsheetData();
+
 
 const rooms = {};
 
@@ -205,4 +208,8 @@ function deleteRoom(key) {
 function openChac(key, chac) {
   const room = rooms[key];
   room.openChacRoom(this, chac);
+}
+
+function playerVote(key, voteN) {
+  rooms[key].vote(this, voteN-1);
 }

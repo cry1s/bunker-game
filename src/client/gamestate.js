@@ -1,8 +1,17 @@
 // Learn more about this file at:
 // https://victorzhou.com/blog/build-an-io-game-part-1/#7-client-state
 
-import { create } from "lodash";
-import { useSpeccard, openChac } from "./networking";
+import {
+  Dialog
+} from "./dialog"
+import {
+  Chat
+} from "./chat";
+import {
+  useSpeccard,
+  openChac,
+  voteSock
+} from "./networking";
 
 // The "current" state will always be RENDER_DELAY ms behind server time.
 // This makes gameplay smoother and lag less noticeable.
@@ -16,6 +25,8 @@ const gameTerms = document.getElementById("game-terms");
 
 const gameUpdates = [];
 
+const kickedPlayers = {};
+
 const chacsOpened = {
   job: false,
   health: false,
@@ -27,15 +38,9 @@ const chacsOpened = {
   bag: false,
 };
 
-let jobOpened = false;
-let healthOpened = false;
-let bioOpened = false;
-let hobbyOpened = false;
-let feelOpened = false;
-let fobiaOpened = false;
-let infoOpened = false;
-let bagOpened = false;
-
+let dialog = new Dialog();
+let chat = null;
+let myUsername = "";
 let me = null;
 let cicle = 0;
 let key = "";
@@ -78,6 +83,7 @@ function createPlayerCards(usernames) {
     <button class="hidden" id="player${playerN+1}-vote-button" style="background-color: red;">ГОЛОСОВАТЬ ПРОТИВ</button>
     <h4>#${playerN+1} ${usernames[playerN]}</h4>
     </div>`;
+    document.getElementById(`player${playerN+1}-vote-button`).onclick = () => voteAgainst(playerN + 1);
   }
 }
 
@@ -85,6 +91,13 @@ function closeChacs() {
   for (let chac in chacsOpened) {
     chacsOpened[chac] = false;
   }
+}
+
+function voteAgainst(n) {
+  for (let i = 0; i < amountPlayers; i++) {
+    document.getElementById(`player${i+1}-vote-button`).classList.add("hidden");
+  }
+  voteSock(key, n);
 }
 
 function setColorsForChacs() {
@@ -106,11 +119,12 @@ export function processGameUpdate(update) {
   console.log(update);
   cicle = update.cicle;
   for (let playerN = 0; playerN < amountPlayers; playerN++) {
-    const playerKickedText = document.getElementById("player"+(1+playerN)+"-kicked");
-    const playerChacs = document.getElementById("player"+(1+playerN)+"-chacs");
-    const playerUpdate = update[playerN+1];
+    const playerKickedText = document.getElementById("player" + (1 + playerN) + "-kicked");
+    const playerChacs = document.getElementById("player" + (1 + playerN) + "-chacs");
+    const playerUpdate = update[playerN + 1];
     if (playerUpdate.me) {
-      me = playerN+1;
+      myUsername = playerUpdate.username;
+      me = playerN + 1;
       setColorsForChacs();
     }
     document.getElementById(`job${playerN+1}`).innerHTML = `Профессия: ${playerUpdate.job}`;
@@ -122,9 +136,11 @@ export function processGameUpdate(update) {
     document.getElementById(`info${playerN+1}`).innerHTML = `Доп. информация: ${playerUpdate.info}`;
     document.getElementById(`bag${playerN+1}`).innerHTML = `Багаж: ${playerUpdate.bag}`;
     if (playerUpdate.kicked) {
+      kickedPlayers[playerN + 1] = true;
       playerKickedText.classList.remove("hidden");
       playerChacs.classList.add("hidden");
     } else {
+      kickedPlayers[playerN + 1] = false;
       playerKickedText.classList.add("hidden");
       playerChacs.classList.remove("hidden");
     }
@@ -139,6 +155,9 @@ export function processGameUpdate(update) {
       button.innerHTML = update.speccards[id].text;
     }
   }
+  if (!chat) {
+    chat = new Chat(key, myUsername);
+  }
 }
 
 export function chacOpenProcStart(needToOpen) {
@@ -147,7 +166,7 @@ export function chacOpenProcStart(needToOpen) {
     localOpenChac("job")
   }
   document.getElementById(`health${me}`).onclick = chacsOpened.health ? "" : () => localOpenChac("health");
-  document.getElementById(`bio${me}`).onclick = chacsOpened.bio ? "" : () => localOpenChac("bio"); 
+  document.getElementById(`bio${me}`).onclick = chacsOpened.bio ? "" : () => localOpenChac("bio");
   document.getElementById(`hobby${me}`).onclick = chacsOpened.hobby ? "" : () => localOpenChac("hobby");
   document.getElementById(`feel${me}`).onclick = chacsOpened.feel ? "" : () => localOpenChac("feel");
   document.getElementById(`fobia${me}`).onclick = chacsOpened.fobia ? "" : () => localOpenChac("fobia");
@@ -157,6 +176,7 @@ export function chacOpenProcStart(needToOpen) {
 
 function localOpenChac(chac) {
   chacsOpened[chac] = true;
+  document.getElementById(`${chac}${me}`).onclick = "";
   needToOpenChacs--;
   openChac(key, chac);
   if (!needToOpenChacs) {
@@ -172,4 +192,32 @@ function chacOpenProcEnd() {
   document.getElementById(`fobia${me}`).onclick = null;
   document.getElementById(`info${me}`).onclick = null;
   document.getElementById(`bag${me}`).onclick = null;
+}
+
+export function playerVoteStarted() {
+  for (let i in kickedPlayers) {
+    if (!kickedPlayers[i] && i != me) {
+      const button = document.getElementById(`player${i}-vote-button`);
+      button.onclick = () => voteAgainst(i);
+      button.classList.remove("hidden");
+    }
+  }
+  dialog.showMessage("Ваш черед голосовать");
+}
+
+export function changeVoteStarted() {
+  for (let i in kickedPlayers) {
+    if (!kickedPlayers[i] && i != me) {
+      document.getElementById(`player${i}-vote-button`).classList.remove("hidden");
+    }
+  }
+  dialog.showMessage("Измените голос, если хотите");
+}
+
+export function dialogMessage(msg) {
+  dialog.showMessage(msg);
+}
+
+export function justificationStarted(username) {
+  dialog.showMessage("Внимание, оправдывается " + username + "!");
 }

@@ -1,12 +1,11 @@
 const Constants = require('../shared/constants');
 const Elections = require('./vote');
-const { result } = require('lodash');
 
 class ElectionStage {
     constructor(players, sockets, needToKick) {
         this.finished = false;
-        this.players = players;
-        this.sockets = sockets;
+        this.players = Object.assign({}, players);
+        this.sockets = Object.assign({}, sockets);
         this.notKickedPlayers = [];
         this.notKickedSockets = [];
         this.election = new Elections(players);
@@ -35,8 +34,8 @@ class ElectionStage {
         }
     }
 
-    onVote(enemyID) {
-        const voterID = this.notKickedPlayers[this.currentPlayerNumber].socketId;
+    onVote(voterID, enemyID) {
+        console.log(voterID, enemyID);
         this.election.vote(voterID, enemyID);
         this.currentPlayerNumber++;
         if (this.currentPlayerNumber >= this.amountOfPlayers) {
@@ -47,7 +46,7 @@ class ElectionStage {
                 Object.keys(this.players).forEach(socketId => {
                     this.sockets[socketId].emit(Constants.MSG_TYPES.DIALOG_MESSAGE, "Результат:<br />\n" + this.election.toString() + "<br />\nЧерез 10 секунд будет выдано по 60 секунд на оправдание");
                 });
-                setTimeout(this.startJustification, 10000, this.players[this.losers.shift()].username);
+                setTimeout(this.startJustification.bind(this), 10000, this.players[this.losers.shift()].username);
             } else {
                 if (ElectionStage.equals(this.losers, this.lastLosers)) {
                     if (this.losers.length == 1) {
@@ -68,14 +67,16 @@ class ElectionStage {
                     this.startJustification(this.players[this.losers.shift()].username)
                 }
             }
+        } else {
+            this.sendVoteStarted();
         }
     }
 
     startJustification(username) {
-        Object.keys(this.players).forEach(socketId => {
+        Object.keys(this.sockets).forEach(socketId => {
             this.sockets[socketId].emit(Constants.MSG_TYPES.JUSTIFICATION_STARTED, username);
         });
-        setTimeout(this.endJustification, 60000);
+        setTimeout(this.endJustification.bind(this), 5000);
     }
 
     endJustification() {
@@ -90,7 +91,7 @@ class ElectionStage {
     
     kick(loserID) {
         Object.keys(this.players).forEach(socketId => {
-            this.sockets[socketId].emit(Constants.MSG_TYPES.DIALOG_MESSAGE, `Игрок ${this.players[loserID]} был изгнан!`);
+            this.sockets[socketId].emit(Constants.MSG_TYPES.DIALOG_MESSAGE, `Игрок ${this.players[loserID].username} был изгнан!`);
         });
         this.players[loserID].kicked = true;
         this.kicked++;
@@ -126,7 +127,7 @@ class ElectionStage {
     }
 
     static equals(arr1, arr2) {
-        result = arr1.length == arr2.length;
+        let result = arr1.length == arr2.length;
         if (result) {
             arr1.forEach(el => {
                 if (!arr2.includes(el)) result = false;
@@ -136,7 +137,7 @@ class ElectionStage {
     }
 
     static contains(smalerArr, biggerArr) {
-        result = true;
+        let result = true;
         smalerArr.forEach(el => {
             if (!biggerArr.includes(el)) result = false;
         });
