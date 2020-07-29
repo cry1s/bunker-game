@@ -76,7 +76,7 @@ class ElectionStage {
         Object.keys(this.sockets).forEach(socketId => {
             this.sockets[socketId].emit(Constants.MSG_TYPES.JUSTIFICATION_STARTED, username);
         });
-        setTimeout(this.endJustification.bind(this), 5000);
+        setTimeout(this.endJustification.bind(this), 60000);
     }
 
     endJustification() {
