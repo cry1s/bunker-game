@@ -29,7 +29,7 @@ class Player {
     this.info = null;         // }
     this.bag = null;          // I'm so sorry for not having Class
     this.speccards = null;    // for tasks like this.
-
+    
     this.giveStartCards(deck);
   }
 
@@ -42,7 +42,6 @@ class Player {
     this.giveRandomCard(deck.fobies, "fobia");
     this.giveRandomCard(deck.infos, "info");
     this.giveRandomCard(deck.bags, "bag");
-    this.giveRandomCard(deck.speccards, "speccards");
     this.giveRandomSpecCards(deck.speccards);
   }
 
@@ -74,19 +73,14 @@ class Player {
   }
 
   giveRandomSpecCards(deckSpeccardSection) {
-    let n = this.randomInt(0, Object.keys(deckSpeccardSection).length);
-    while (deckSpeccardSection[n] === undefined) {
-      n = this.randomInt(0, Object.keys(deckSpeccardSection).length);
-    }
+    let n = Object.keys(deckSpeccardSection)[this.randomInt(0, Object.keys(deckSpeccardSection).length-1)];
     this.speccards = {
       "text1": deckSpeccardSection[n],
       "id1": n,
       "used1": false,
     };
     delete deckSpeccardSection[n];
-    while (deckSpeccardSection[n] === undefined) {
-      n = this.randomInt(0, Object.keys(deckSpeccardSection).length);
-    }
+    n = Object.keys(deckSpeccardSection)[this.randomInt(0, Object.keys(deckSpeccardSection).length-1)];
     this.speccards.id2 = n;
     this.speccards.text2 = deckSpeccardSection[n];
     this.speccards.used2 = false;
@@ -94,10 +88,7 @@ class Player {
   }
 
   giveRandomCard(oTypeCards, keyToWrite) {
-    let n = this.randomInt(0, Object.keys(oTypeCards).length);
-    while (oTypeCards[n] === undefined) {
-      n = this.randomInt(0, Object.keys(oTypeCards).length);
-    }
+    let n = Object.keys(oTypeCards)[this.randomInt(0, Object.keys(oTypeCards).length-1)];
     this[keyToWrite] = {
       "text": oTypeCards[n],
       "id": n,
