@@ -2,6 +2,7 @@ const Constants = require('../shared/constants');
 const Player = require('./player');
 const OpenChacsStage = require('./openchacsstage');
 const ElectionStage = require('./electionstage');
+const Chat = require('./chat');
 
 class Room {
   static catastrofa = {};
@@ -10,6 +11,7 @@ class Room {
   constructor(code) {
     this.code = code;
     this.sockets = {};
+    this.chat = new Chat(this.sockets);
     this.players = {};
     this.playersArr = [];
     this.amountPlayers = 0;
@@ -238,6 +240,10 @@ class Room {
   static setTerms(termsFromSpreadsheet) {
     Room.catastrofa = termsFromSpreadsheet;
     console.log("Terms updated")
+  }
+
+  sendChatMessage(msg) {
+    this.chat.sendMessageForAll(msg);
   }
 }
 

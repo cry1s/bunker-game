@@ -38,15 +38,20 @@ io.on('connection', socket => {
   socket.on(Constants.MSG_TYPES.CREATE_ROOM, createRoom);
   socket.on(Constants.MSG_TYPES.JOIN_ROOM, joinRoom);
   socket.on(Constants.MSG_TYPES.LEAVE_ROOM, leaveRoom);
-  socket.on(Constants.MSG_TYPES.PLAYER_READY, switchReady)
-  socket.on(Constants.MSG_TYPES.OPEN_CHAC, openChac)
-  socket.on(Constants.MSG_TYPES.PLAYER_VOTE, playerVote)
+  socket.on(Constants.MSG_TYPES.PLAYER_READY, switchReady);
+  socket.on(Constants.MSG_TYPES.OPEN_CHAC, openChac);
+  socket.on(Constants.MSG_TYPES.PLAYER_VOTE, playerVote);
+  socket.on(Constants.MSG_TYPES.SEND_CHAT_MESSAGE, sendChatMessage);
   socket.on('disconnect', onDisconnect);
 });
 
 
 
 const rooms = {};
+
+function sendChatMessage(key, msg) {
+  rooms[key].sendChatMessage(msg);
+}
 
 function switchReady(key) {
   rooms[key].playerSwitchReady(this);

@@ -10,6 +10,7 @@ import {
   changeVoteStarted,
   dialogMessage,
   justificationStarted,
+  chatUpdate,
 } from './gamestate';
 import {
   lobbyUpdate
@@ -33,7 +34,8 @@ export const connect = onGameOver => (
     // Register callbacks
     socket.on(Constants.MSG_TYPES.LOBBY_UPDATE, lobbyUpdate);
     socket.on(Constants.MSG_TYPES.INIT_GAME_UPDATE, initGameUpdate);
-    socket.on(Constants.MSG_TYPES.TERMS_UPDATE, termsUpdate)
+    socket.on(Constants.MSG_TYPES.TERMS_UPDATE, termsUpdate);
+    socket.on(Constants.MSG_TYPES.CHAT_UPDATE, chatUpdate);
     socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate);
     socket.on(Constants.MSG_TYPES.CHAC_OPEN_PROCESS_STARTED, chacOpenProcStart);
     socket.on(Constants.MSG_TYPES.PLAYER_VOTE_STARTED, playerVoteStarted);

@@ -1,4 +1,6 @@
-import { sendMsg } from "./networking";
+import {
+    sendMsg
+} from "./networking";
 
 export class Chat {
     constructor(key, username) {
@@ -16,7 +18,7 @@ export class Chat {
     sendMessage() {
         let msg = this.messageView.value;
         if (msg) {
-            sendMsg(this.key, msg);
+            sendMsg(this.key, this.username + ": " + msg);
         }
         this.messageView.value = "";
     }

@@ -174,6 +174,10 @@ export function chacOpenProcStart(needToOpen) {
   document.getElementById(`bag${me}`).onclick = chacsOpened.bag ? "" : () => localOpenChac("bag");
 }
 
+export function chatUpdate(msg) {
+  chat.onUpdate(msg);
+}
+
 function localOpenChac(chac) {
   chacsOpened[chac] = true;
   document.getElementById(`${chac}${me}`).onclick = "";
