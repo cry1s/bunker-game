@@ -83,7 +83,7 @@ class Room {
   update() {
     switch (this.state) {
       case Constants.ROOM_STATES.LOBBY:
-        if (this.isAllPlayersReady() && (Object.keys(this.players).length >= 5)) {
+        if (this.isAllPlayersReady() && (Object.keys(this.players).length >= Constants.MIN_PLAYERS)) {
           this.generateTerms();
           this.sendUpdateForAll(Constants.MSG_TYPES.INIT_GAME_UPDATE, this.createInitUpdate());
           this.sendUpdateForAll(Constants.MSG_TYPES.TERMS_UPDATE, this.terms);

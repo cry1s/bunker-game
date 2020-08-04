@@ -3,6 +3,7 @@ module.exports = Object.freeze({
   PLAYER_MAX_HP: 100,
   PLAYER_SPEED: 400,
   PLAYER_FIRE_COOLDOWN: 0.25,
+  MIN_PLAYERS: 4,
 
   GOOGLE_SPREADSHEET_ID: '1rRKfvFjzKkI5rT6Q7vPANhn1NTAZ-7mPaCmoxgtmVu4',
   MSG_TYPES: {
