@@ -1,10 +1,5 @@
 const Constants = require("../shared/constants");
-const {
-    Socket
-} = require("socket.io-client");
-const {
-    create
-} = require("lodash");
+
 class SpeccardManager {
     // all cards https://docs.google.com/spreadsheets/d/1rRKfvFjzKkI5rT6Q7vPANhn1NTAZ-7mPaCmoxgtmVu4/edit#gid=0&range=I2
     static cards = {};
@@ -227,12 +222,12 @@ class SpeccardManager {
             [id1]: {
                 passive: SpeccardManager.isPassive(id1),
                 used: (id1 in this.usedSpeccards),
-                text: cards[id1],
+                text: SpeccardManager.cards[id1],
             },
             [id2]: {
                 passive: SpeccardManager.isPassive(id2),
                 used: (id2 in this.usedSpeccards),
-                text: cards[id2],
+                text: SpeccardManager.cards[id2],
             },
         }
     }
