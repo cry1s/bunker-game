@@ -3,6 +3,7 @@ const Player = require('./player');
 const OpenChacsStage = require('./openchacsstage');
 const ElectionStage = require('./electionstage');
 const Chat = require('./chat');
+const SpeccardManager = require('./speccardmanager');
 
 class Room {
   static catastrofa = {};
@@ -25,6 +26,7 @@ class Room {
     this.electionStage = null;
     this.shouldSendUpdate = true;
     this.cicles = 1;
+    this.speccardManager = new SpeccardManager(this);
     setInterval(this.update.bind(this), 1000 / 60);
   }
 
@@ -182,7 +184,8 @@ class Room {
         bag: this.getChac("bag", curPlayer, isOwner),
       };
       if (isOwner) {
-        update.speccards = {
+        update.speccards = this.speccardManager.getSpeccardUpdateByIds(curPlayer.speccards.id1, curPlayer.speccards.id2);
+        /*{
           [curPlayer.speccards.id1]: {
             used: curPlayer.speccards.used1,
             text: curPlayer.speccards.text1,
@@ -191,7 +194,7 @@ class Room {
             used: curPlayer.speccards.used2,
             text: curPlayer.speccards.text2,
           },
-        }
+        }*/
       }
     }
     return update;
@@ -234,6 +237,7 @@ class Room {
 
   static setCards(cardsFromSpreadsheet) {
     Room.cards = cardsFromSpreadsheet;
+    SpeccardManager.cards = cardsFromSpreadsheet.speccards;
     console.log("Cards updated");
   }
 
