@@ -4,6 +4,7 @@ const OpenChacsStage = require('./openchacsstage');
 const ElectionStage = require('./electionstage');
 const Chat = require('./chat');
 const SpeccardManager = require('./speccardmanager');
+const Elections = require('./vote');
 
 class Room {
   static catastrofa = {};
@@ -120,6 +121,9 @@ class Room {
             const kicked = this.electionStage.getResult();
             this.needToKick -= kicked - 1;
             this.amountPlayers -= kicked;
+            this.electionStage = null;
+            Elections.hacker20 = null;
+            ElectionStage.hacker22 = null;
             if (this.amountPlayers <= this.amountPlayersToEnd) {
               this.state = Constants.ROOM_STATES.RESULTS;
             } else {
@@ -248,6 +252,11 @@ class Room {
 
   sendChatMessage(msg) {
     this.chat.sendMessageForAll(msg);
+  }
+
+  plusTerms(text) {
+    this.terms += "<br \>"+text+"<br \>";
+    this.sendUpdateForAll(Constants.MSG_TYPES.TERMS_UPDATE, this.terms);
   }
 }
 

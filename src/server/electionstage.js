@@ -2,6 +2,8 @@ const Constants = require('../shared/constants');
 const Elections = require('./vote');
 
 class ElectionStage {
+    static hacker22 = null; // speccard case 22
+
     constructor(players, sockets, needToKick) {
         this.finished = false;
         this.players = Object.assign({}, players);
@@ -90,10 +92,16 @@ class ElectionStage {
     }
     
     kick(loserID) {
-        Object.keys(this.players).forEach(socketId => {
-            this.sockets[socketId].emit(Constants.MSG_TYPES.DIALOG_MESSAGE, `Игрок ${this.players[loserID].username} был изгнан!`);
-        });
-        this.players[loserID].kicked = true;
+        if (loserID != ElectionStage.hacker22) {
+            Object.keys(this.players).forEach(socketId => {
+                this.sockets[socketId].emit(Constants.MSG_TYPES.DIALOG_MESSAGE, `Игрок ${this.players[loserID].username} был изгнан!`);
+            });
+            this.players[loserID].kicked = true;
+        } else {
+            Object.keys(this.players).forEach(socketId => {
+                this.sockets[socketId].emit(Constants.MSG_TYPES.DIALOG_MESSAGE, `Игрок ${this.players[loserID].username} под защитой своей спецкарты!`);
+            });
+        }
         this.kicked++;
         this.needToKick--;
         if (this.needToKick <= 0) this.finished = true;

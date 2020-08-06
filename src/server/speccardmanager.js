@@ -1,4 +1,6 @@
 const Constants = require("../shared/constants");
+const Elections = require("./vote");
+const ElectionStage = require("./electionstage");
 
 class SpeccardManager {
     // all cards https://docs.google.com/spreadsheets/d/1rRKfvFjzKkI5rT6Q7vPANhn1NTAZ-7mPaCmoxgtmVu4/edit#gid=0&range=I2
@@ -171,18 +173,64 @@ class SpeccardManager {
             
             // Данная карта дает тебе возможность самому выбрать кто покинет игровой круг без голосования
             case 18:
-                // TODO
+                this.sendChoose(socket.id, Constants.SPECCARD_CHOOSE_TYPE.LIVING_EXCEPT_ME);
+                this.waitForChoose[socket.id] = id;
+                break;
+
+            // Данная карта дает тебе возможность забрать
+            // голос другого игрока, теперь у тебя их два
+            case 19:
+                this.sendChoose(socket.id, Constants.SPECCARD_CHOOSE_TYPE.LIVING_EXCEPT_ME);
+                this.waitForChoose[socket.id] = id;
+                break;
+
+            // Данная карта дает возможность аннулировать один голос против тебя
+            case 20:
+                Elections.hacker20 = socket.id;
+                this.usedSpeccards.push(id);
+                break;
+
+            // У тебя есть защита на один игровой круг другого игрока,
+            // ты не можешь защитить себя
+            case 21:
+                this.sendChoose(socket.id, Constants.SPECCARD_CHOOSE_TYPE.LIVING_EXCEPT_ME);
+                this.waitForChoose[socket.id] = id;
                 break;
             
-            // У тебя есть защита  на один игровой круг,
+            // У тебя есть защита на один игровой круг,
             // если против твоего персонажа максимальное количество голосов
             case 22:
-                // TODO
+                ElectionStage.hacker22 = socket.id;
+                this.usedSpeccards.push(id);
+                break;
+
+            // карты на плюс правила
+            case 25:
+            case 27:
+            case 28:
+            case 29:
+            case 30:
+            case 31:
+            case 32:
+            case 34:
+            case 35:
+                this.room.plusTerms(SpeccardManager.cards[id]);
+                this.usedSpeccards.push(id);
                 break;
             
+            // Количество мест в бункере больше на 1
+            case 26:
+                this.room.amountPlayersToEnd++;
+                break;
+            
+            // Количество мест в бункере меньше на 1
+            case 33:
+                this.room.amountPlayersToEnd--;
+                break;
         }
     }
 
+    // var choose need to be like "1" or "job1"
     onChoose(socket, choose) {
         const id = this.waitForChoose[socket.id];
         switch (id) {
@@ -196,6 +244,15 @@ class SpeccardManager {
                 // TODO
                 break;
             case 5:
+                // TODO
+                break;
+            case 18:
+                // TODO
+                break;
+            case 19:
+                // TODO
+                break;
+            case 21:
                 // TODO
                 break;
         }
@@ -230,6 +287,14 @@ class SpeccardManager {
                 text: SpeccardManager.cards[id2],
             },
         }
+    }
+
+    case23() {
+        // TODO
+    }
+
+    case24() {
+        // TODO
     }
 }
 
