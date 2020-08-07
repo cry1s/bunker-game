@@ -14,7 +14,7 @@ class SpeccardManager {
     }
 
     onUseSpeccard(socket, id) {
-        switch (id) {
+        switch (Number(id)) {
             // Данная карта дает тебе возможность открыть
             // карту любой категории у любого игрока на выбор 
             case 1:
@@ -186,7 +186,7 @@ class SpeccardManager {
 
             // Данная карта дает возможность аннулировать один голос против тебя
             case 20:
-                Elections.hacker20 = socket.id;
+                this.room.hacker20 = socket.id;
                 this.usedSpeccards.push(id);
                 break;
 
@@ -200,7 +200,7 @@ class SpeccardManager {
             // У тебя есть защита на один игровой круг,
             // если против твоего персонажа максимальное количество голосов
             case 22:
-                ElectionStage.hacker22 = socket.id;
+                this.room.hacker22 = socket.id;
                 this.usedSpeccards.push(id);
                 break;
 
@@ -220,50 +220,96 @@ class SpeccardManager {
             
             // Количество мест в бункере больше на 1
             case 26:
+                this.room.plusTerms(SpeccardManager.cards[id]);
                 this.room.amountPlayersToEnd++;
+                this.usedSpeccards.push(id);
                 break;
             
             // Количество мест в бункере меньше на 1
             case 33:
+                this.room.plusTerms(SpeccardManager.cards[id]);
                 this.room.amountPlayersToEnd--;
+                this.usedSpeccards.push(id);
                 break;
         }
     }
 
-    // var choose need to be like "1" or "job1"
+    // var choose need to be like "1" or "job 1"
     onChoose(socket, choose) {
         const id = this.waitForChoose[socket.id];
         switch (id) {
+            // Данная карта дает тебе возможность открыть
+            // карту любой категории у любого игрока на выбор 
             case 1:
-                // TODO
+                const chac = String(choose).split(" ")[0];
+                const i = Number(String(choose).split(" ")[1]) - 1;
+                const player = this.players[ Object.keys(this.players)[i] ];
+                player.openCard(chac);
+                this.room.shouldSendUpdate = true;
+                this.usedSpeccards.push(id);
                 break;
+
+            // Данная карта дает тебе возможность
+            // возвратить любого выбывшего игрока в игру
             case 2:
-                // TODO
+                const i = Number(choose) - 1;
+                const player = this.players[ Object.keys(this.players)[i] ];
+                player.returnToGame();
+                this.room.shouldSendUpdate = true;
+                this.usedSpeccards.push(id);
                 break;
+
+            // Данная карта дает тебе возможность
+            // поменяться картой Фобия с любым игроком на выбор
             case 3:
-                // TODO
+                const i = Number(choose) - 1;
+                const player = this.players[ Object.keys(this.players)[i] ];
+                player.tradeCardWithPlayer(this.players[socket.id], "fobia");
+                this.room.shouldSendUpdate = true;
+                this.usedSpeccards.push(id);
                 break;
+
+            // Данная карта дает тебе возможность
+            // поменяться картой Здоровье с любым игроком на выбор
             case 5:
-                // TODO
+                const i = Number(choose) - 1;
+                const player = this.players[ Object.keys(this.players)[i] ];
+                player.tradeCardWithPlayer(this.players[socket.id], "health");
+                this.room.shouldSendUpdate = true;
+                this.usedSpeccards.push(id);
                 break;
+
+            // Данная карта дает тебе возможность 
+            // самому выбрать кто покинет игровой круг без голосования
             case 18:
-                // TODO
+                const i = Number(choose) - 1;
+                this.room.hacker18 = Object.keys(this.players)[i]
+                this.usedSpeccards.push(id);
                 break;
+
+            // Данная карта дает тебе возможность забрать
+            // голос другого игрока, теперь у тебя их два
             case 19:
-                // TODO
+                const i = Number(choose) - 1;
+                const hacker19 = socket.id;
+                const target19 = Object.keys(this.players)[i];
+                this.room.hacker19 = hacker19;
+                this.room.target19 = target19;
+                this.usedSpeccards.push(id);
                 break;
+
+            // У тебя есть защита на один игровой круг другого игрока,
+            // ты не можешь защитить себя
             case 21:
-                // TODO
+                const i = Number(choose) - 1;
+                this.room.hacker22 = Object.keys(this.players)[i];
+                this.usedSpeccards.push(id);
                 break;
         }
     }
 
     sendUpdate(socketid) {
-        this.sockets[socketid].emit(Constants.MSG_TYPES.SPECCARD_UPDATE, this.createUpdate())
-    }
-
-    createUpdate() {
-        return {};
+        this.sockets[socketid].emit(Constants.MSG_TYPES.SPECCARD_UPDATE)
     }
 
     sendChoose(socketid, chooseType) {
@@ -289,12 +335,46 @@ class SpeccardManager {
         }
     }
 
+    // Чтобы одержать победу тебе нужно попасть в бункер
+    // вместе с игроком следующего номера
     case23() {
-        // TODO
+        const ownerID = this.checkForCard(23);
+        if (ownerID) {
+            const owner = Object.keys(this.players).indexOf(ownerID)
+            let next = ((owner + 1) == Object.keys(this.players).length) ? 0 : (owner + 1);
+            const nextID = Object.keys(this.players)[next]
+            const ownerPlayer = this.players[ownerID];
+            const nextPlayer = this.players[nextID];
+            if (nextPlayer.kicked) ownerPlayer.kicked = true;
+            this.room.shouldSendUpdate = true;
+        }
     }
 
+    // Человек следующего номера от тебя  -  враг,
+    // если он останется в игре - ты проиграешь, даже попав в бункер.
     case24() {
-        // TODO
+        const ownerID = this.checkForCard(24);
+        if (ownerID) {
+            const owner = Object.keys(this.players).indexOf(ownerID)
+            let next = ((owner + 1) == Object.keys(this.players).length) ? 0 : (owner + 1);
+            const nextID = Object.keys(this.players)[next]
+            const ownerPlayer = this.players[ownerID];
+            const nextPlayer = this.players[nextID];
+            if (!nextPlayer.kicked) ownerPlayer.kicked = true;
+            this.room.shouldSendUpdate = true;
+        }
+    }
+
+    checkForCard(id) {
+        for (const playerID in this.players) {
+            if (this.players.hasOwnProperty(playerID)) {
+                const player = this.players[playerID];
+                if (player.speccards.id1 == String(id) || player.speccards.id1 == String(id)) {
+                    return playerID;
+                }
+            }
+        }
+        return null;
     }
 }
 

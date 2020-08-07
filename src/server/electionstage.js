@@ -2,15 +2,15 @@ const Constants = require('../shared/constants');
 const Elections = require('./vote');
 
 class ElectionStage {
-    static hacker22 = null; // speccard case 22
 
-    constructor(players, sockets, needToKick) {
+    constructor(players, sockets, needToKick, room) {
+        this.room = room;
         this.finished = false;
         this.players = Object.assign({}, players);
         this.sockets = Object.assign({}, sockets);
         this.notKickedPlayers = [];
         this.notKickedSockets = [];
-        this.election = new Elections(players);
+        this.election = new Elections(players, room);
         for (let playerID in sockets) {
             if (!players[playerID].kicked) {
                 this.notKickedSockets.push(sockets[playerID]);
@@ -28,7 +28,10 @@ class ElectionStage {
     }
 
     sendVoteStarted() {
-        const socket = this.notKickedPlayers[this.currentPlayerNumber];
+        let socket = this.notKickedPlayers[this.currentPlayerNumber];
+        if (socket.id == this.room.target19) {
+            socket = this.sockets[this.room.hacker19]
+        }
         if (!this.changingVotes) {
             socket.emit(Constants.MSG_TYPES.PLAYER_VOTE_STARTED);
         } else {
@@ -40,7 +43,10 @@ class ElectionStage {
         console.log(voterID, enemyID);
         this.election.vote(voterID, enemyID);
         this.currentPlayerNumber++;
-        if (this.currentPlayerNumber >= this.amountOfPlayers) {
+        if (this.room.hacker18) {
+            this.kick(this.room.hacker18);
+            this.room.hacker18 = null;
+        } else if (this.currentPlayerNumber >= this.amountOfPlayers) {
             this.election.determineLosers();
             this.losers = this.election.losersID;
             if (!this.changingVotes) {
@@ -92,7 +98,11 @@ class ElectionStage {
     }
     
     kick(loserID) {
-        if (loserID != ElectionStage.hacker22) {
+        if (loserID == this.room.hacker19) {
+            this.room.hacker19 = null;
+            this.room.target19 = null;
+        }
+        if (loserID != this.room.hacker22) {
             Object.keys(this.players).forEach(socketId => {
                 this.sockets[socketId].emit(Constants.MSG_TYPES.DIALOG_MESSAGE, `Игрок ${this.players[loserID].username} был изгнан!`);
             });

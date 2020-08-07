@@ -23,8 +23,8 @@ class Player {
     this.feel = null;         //  "isOpen": true/false;
     this.fobia = null;
     this.info = null;         // }
-    this.bag = null;          // I'm so sorry for not having Class
-    this.speccards = null;    // for tasks like this.
+    this.bag = null;          // 
+    this.speccards = null;    // 
     
     this.giveStartCards(deck);
   }

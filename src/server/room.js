@@ -4,7 +4,6 @@ const OpenChacsStage = require('./openchacsstage');
 const ElectionStage = require('./electionstage');
 const Chat = require('./chat');
 const SpeccardManager = require('./speccardmanager');
-const Elections = require('./vote');
 
 class Room {
   static catastrofa = {};
@@ -28,6 +27,11 @@ class Room {
     this.shouldSendUpdate = true;
     this.cicles = 1;
     this.speccardManager = new SpeccardManager(this);
+    this.hacker18 = null;
+    this.hacker19 = null;
+    this.target19 = null;
+    this.hacker20 = null;
+    this.hacker22 = null;
     setInterval(this.update.bind(this), 1000 / 60);
   }
 
@@ -106,13 +110,18 @@ class Room {
           });
           this.shouldSendUpdate = false;
         }
+
+        if (this.gameState != Constants.ROOM_STATES.RESULTS && this.amountPlayers <= this.amountPlayersToEnd) {
+          this.state = Constants.ROOM_STATES.RESULTS;
+        }
+
         if (this.gameState == Constants.GAME_STATES.OPENING_CHACS && this.openChacStage == null) {
           this.openChacStage = new OpenChacsStage(this.players, this.sockets, this.cicles == 1);
         } else if (this.gameState == Constants.GAME_STATES.OPENING_CHACS && this.openChacStage != null) {
           if (this.openChacStage.finished) {
             this.gameState = Constants.GAME_STATES.ELECTION;
             this.openChacStage = null;
-            this.electionStage = new ElectionStage(this.players, this.sockets, this.needToKick);
+            this.electionStage = new ElectionStage(this.players, this.sockets, this.needToKick, this);
           }
         } else if (this.gameState == Constants.GAME_STATES.ELECTION) {
           if (this.electionStage.finished) {
@@ -122,14 +131,26 @@ class Room {
             this.needToKick -= kicked - 1;
             this.amountPlayers -= kicked;
             this.electionStage = null;
-            Elections.hacker20 = null;
-            ElectionStage.hacker22 = null;
+            this.hacker18 = null;
+            this.hacker19 = null;
+            this.target19 = null;
+            this.hacker20 = null;
+            this.hacker22 = null;
             if (this.amountPlayers <= this.amountPlayersToEnd) {
               this.state = Constants.ROOM_STATES.RESULTS;
+              // TODO
             } else {
               this.gameState = Constants.GAME_STATES.OPENING_CHACS;
             }
           }
+        }
+        break;
+      case Constants.ROOM_STATES.RESULTS:
+        if (this.shouldSendUpdate) {
+          Object.keys(this.players).forEach(playerID => {
+            this.sockets[playerID].emit(Constants.MSG_TYPES.GAME_UPDATE, this.createUpdate(playerID));
+          });
+          this.shouldSendUpdate = false;
         }
         break;
     }

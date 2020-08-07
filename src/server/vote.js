@@ -1,11 +1,11 @@
 const Constants = require('../shared/constants');
 
 class Elections {
-    static hacker20 = null; // speccard case 20
     
-    constructor(playersObj) {
+    constructor(playersObj, room) {
         this.players = Object.assign({}, playersObj);
         this.maxVotes = 0;
+        this.room = room;
         this.currentVotes = 0;
         this.losersID = [];
         this.state = Constants.ELECTIONS_STATES.IN_PROGRESS;
@@ -44,7 +44,7 @@ class Elections {
             const player = this.players[playerID];
 
             // speccard case 20
-            if (playerID == Elections.hacker20 && this.state != Constants.ELECTIONS_STATES.FINISHED) {
+            if (playerID == this.room.hacker20 && this.state != Constants.ELECTIONS_STATES.FINISHED) {
                 if (--player.voices <= -1) {
                     player.voices = 0;
                 }
