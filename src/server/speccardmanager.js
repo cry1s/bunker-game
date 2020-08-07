@@ -51,6 +51,9 @@ class SpeccardManager {
                     const player2 = this.players[Object.keys(this.players)[next]]
                     player1.tradeCardWithPlayer(player2, "health");
                 }
+                this.usedSpeccards.push(id);
+                this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
             
             // Данная карта дает тебе возможность
@@ -69,6 +72,7 @@ class SpeccardManager {
                 });
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
 
             // Данная карта дает тебе возможность перераздать у всех игроков
@@ -80,6 +84,7 @@ class SpeccardManager {
                 });
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
 
             // Данная карта дает тебе возможность перераздать у всех игроков
@@ -91,6 +96,7 @@ class SpeccardManager {
                 });
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
 
             // Данная карта дает тебе возможность перераздать у всех игроков
@@ -102,6 +108,7 @@ class SpeccardManager {
                 });
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
             
             // Данная карта дает тебе возможность перераздать у 
@@ -113,6 +120,7 @@ class SpeccardManager {
                 });
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
             
             // Данная карта дает тебе возможность перераздать у 
@@ -124,6 +132,7 @@ class SpeccardManager {
                 })
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
 
             // Ты можешь поменять свою карту Биологическая характеристика
@@ -132,6 +141,7 @@ class SpeccardManager {
                 this.players[socket.id].makeBioCard();
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
             
             // Ты можешь поменять свою карту Фобия на новую случайную из колоды
@@ -139,6 +149,7 @@ class SpeccardManager {
                 this.players[socket.id].retakeCard(this.room.deck.fobies, "fobia");
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
             
             // Данная карта дает возможность вылечить твою фобию
@@ -147,6 +158,7 @@ class SpeccardManager {
                 this.players[socket.id].openCard("fobia");
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
             
             // Ты можешь поменять свою карту Профессия на новую случайную из колоды
@@ -154,6 +166,7 @@ class SpeccardManager {
                 this.players[socket.id].retakeCard(this.room.deck.jobs, "job");
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
             
             // Ты можешь поменять свою карту Дополнительная информация на новую из колоды
@@ -161,6 +174,7 @@ class SpeccardManager {
                 this.players[socket.id].retakeCard(this.room.deck.infos, "info");
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
 
             // Данная карта дает возможность вылечить тебя от любого недуга, теперь ты абсолютно здоров)
@@ -169,6 +183,7 @@ class SpeccardManager {
                 this.players[socket.id].openCard("health");
                 this.usedSpeccards.push(id);
                 this.room.shouldSendUpdate = true;
+                this.sendUpdate(socket.id);
                 break;
             
             // Данная карта дает тебе возможность самому выбрать кто покинет игровой круг без голосования
@@ -188,6 +203,7 @@ class SpeccardManager {
             case 20:
                 this.room.hacker20 = socket.id;
                 this.usedSpeccards.push(id);
+                this.sendUpdate(socket.id);
                 break;
 
             // У тебя есть защита на один игровой круг другого игрока,
@@ -195,6 +211,7 @@ class SpeccardManager {
             case 21:
                 this.sendChoose(socket.id, Constants.SPECCARD_CHOOSE_TYPE.LIVING_EXCEPT_ME);
                 this.waitForChoose[socket.id] = id;
+                this.sendUpdate(socket.id);
                 break;
             
             // У тебя есть защита на один игровой круг,
@@ -202,6 +219,7 @@ class SpeccardManager {
             case 22:
                 this.room.hacker22 = socket.id;
                 this.usedSpeccards.push(id);
+                this.sendUpdate(socket.id);
                 break;
 
             // карты на плюс правила
@@ -216,6 +234,7 @@ class SpeccardManager {
             case 35:
                 this.room.plusTerms(SpeccardManager.cards[id]);
                 this.usedSpeccards.push(id);
+                this.sendUpdate(socket.id);
                 break;
             
             // Количество мест в бункере больше на 1
@@ -223,6 +242,7 @@ class SpeccardManager {
                 this.room.plusTerms(SpeccardManager.cards[id]);
                 this.room.amountPlayersToEnd++;
                 this.usedSpeccards.push(id);
+                this.sendUpdate(socket.id);
                 break;
             
             // Количество мест в бункере меньше на 1
@@ -230,6 +250,7 @@ class SpeccardManager {
                 this.room.plusTerms(SpeccardManager.cards[id]);
                 this.room.amountPlayersToEnd--;
                 this.usedSpeccards.push(id);
+                this.sendUpdate(socket.id);
                 break;
         }
     }
@@ -237,13 +258,12 @@ class SpeccardManager {
     // var choose need to be like "1" or "job 1"
     onChoose(socket, choose) {
         const id = this.waitForChoose[socket.id];
+        let chac, i, player;
         switch (id) {
-            // Данная карта дает тебе возможность открыть
-            // карту любой категории у любого игрока на выбор 
             case 1:
-                const chac = String(choose).split(" ")[0];
-                const i = Number(String(choose).split(" ")[1]) - 1;
-                const player = this.players[ Object.keys(this.players)[i] ];
+                chac = String(choose).split(" ")[0];
+                i = Number(String(choose).split(" ")[1]) - 1;
+                player = this.players[ Object.keys(this.players)[i] ];
                 player.openCard(chac);
                 this.room.shouldSendUpdate = true;
                 this.usedSpeccards.push(id);
@@ -252,8 +272,8 @@ class SpeccardManager {
             // Данная карта дает тебе возможность
             // возвратить любого выбывшего игрока в игру
             case 2:
-                const i = Number(choose) - 1;
-                const player = this.players[ Object.keys(this.players)[i] ];
+                i = Number(choose) - 1;
+                player = this.players[ Object.keys(this.players)[i] ];
                 player.returnToGame();
                 this.room.shouldSendUpdate = true;
                 this.usedSpeccards.push(id);
@@ -262,8 +282,8 @@ class SpeccardManager {
             // Данная карта дает тебе возможность
             // поменяться картой Фобия с любым игроком на выбор
             case 3:
-                const i = Number(choose) - 1;
-                const player = this.players[ Object.keys(this.players)[i] ];
+                i = Number(choose) - 1;
+                player = this.players[ Object.keys(this.players)[i] ];
                 player.tradeCardWithPlayer(this.players[socket.id], "fobia");
                 this.room.shouldSendUpdate = true;
                 this.usedSpeccards.push(id);
@@ -272,8 +292,8 @@ class SpeccardManager {
             // Данная карта дает тебе возможность
             // поменяться картой Здоровье с любым игроком на выбор
             case 5:
-                const i = Number(choose) - 1;
-                const player = this.players[ Object.keys(this.players)[i] ];
+                i = Number(choose) - 1;
+                player = this.players[ Object.keys(this.players)[i] ];
                 player.tradeCardWithPlayer(this.players[socket.id], "health");
                 this.room.shouldSendUpdate = true;
                 this.usedSpeccards.push(id);
@@ -282,7 +302,7 @@ class SpeccardManager {
             // Данная карта дает тебе возможность 
             // самому выбрать кто покинет игровой круг без голосования
             case 18:
-                const i = Number(choose) - 1;
+                i = Number(choose) - 1;
                 this.room.hacker18 = Object.keys(this.players)[i]
                 this.usedSpeccards.push(id);
                 break;
@@ -290,9 +310,9 @@ class SpeccardManager {
             // Данная карта дает тебе возможность забрать
             // голос другого игрока, теперь у тебя их два
             case 19:
-                const i = Number(choose) - 1;
-                const hacker19 = socket.id;
-                const target19 = Object.keys(this.players)[i];
+                i = Number(choose) - 1;
+                let hacker19 = socket.id;
+                let target19 = Object.keys(this.players)[i];
                 this.room.hacker19 = hacker19;
                 this.room.target19 = target19;
                 this.usedSpeccards.push(id);
@@ -301,11 +321,12 @@ class SpeccardManager {
             // У тебя есть защита на один игровой круг другого игрока,
             // ты не можешь защитить себя
             case 21:
-                const i = Number(choose) - 1;
+                let i = Number(choose) - 1;
                 this.room.hacker22 = Object.keys(this.players)[i];
                 this.usedSpeccards.push(id);
                 break;
         }
+        this.sendUpdate(socket.id);
     }
 
     sendUpdate(socketid) {

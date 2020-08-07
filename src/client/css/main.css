@@ -18,6 +18,7 @@ hr {
 }
 
 button {
+  bottom: 0;
   font-size: 18px;
   outline: none;
   border: none;
@@ -70,6 +71,7 @@ button:focus {
 }
 
 #dialog p,
+#game-utils p,
 #play-menu p,
 #room-menu p {
   margin-bottom: 0;
@@ -97,7 +99,7 @@ button:focus {
 }
 
 #game-terms {
-  height: 20rem;
+  height: 40%;
   overflow: auto;
   border-style: solid;
   border-color: crimson;
@@ -105,17 +107,35 @@ button:focus {
 }
 
 #game-chat {
-  height: fit-content;
-  overflow: auto;
+  bottom: 0;
+}
+
+#game-chat textarea {
+  resize: none;
+  width: 100%;
+  bottom: 0;
+}
+
+#game-chat input[id="send-button"] {
+  bottom: 0;
+  width: 30%;
+  float: right;
+}
+
+#game-chat input[id="message"] {
+  width: 70%;
 }
 
 #game-spec-cards {
-  height: 25%;
+  height: fit-content;
 }
 
-#game-smart-button {
-  height: 25%;
-  float: bottom;
+#game-spec-cards p {
+  bottom: 0;
+}
+
+#game-spec-cards button {
+  width: 100%;
 }
 
 #play-menu input,
@@ -170,9 +190,7 @@ button:focus {
   height: fit-content;
   width: fit-content;
   float: left;
-  margin-top: 1%;
-  margin-left: 1.2%;
-  margin-bottom: 10%;
+  margin: 1%;
   text-align: start;
   border: solid;
 }

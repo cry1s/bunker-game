@@ -69,22 +69,19 @@
           Аптечка первой помощи (3 шт)<br \>
         </p>
       </div>
-      <div id="game-chat">
-        <textarea readonly id="messages" class="messages" style="width: 100%" rows="10"></textarea>
-        <p>
-          <input type="text" name="message" id="message" style="width: 70%;" />
-          <input value="Отправить" type="button" id="send-button" style="width: 30%; float: right;" />
-        </p>
-      </div>
-      <hr />
       <div id="game-spec-cards">
         <h2>СПЕЦКАРТЫ</h2>
-        <p>
-        <button id="speccard1">Рядом с вами второй бункер, где находятся два химика</button>
-        <button id="speccard2">Ты можешь поменять свою карту Профессия на новую из колоды</button>
-      </p>
+          <button id="speccard1">Рядом с вами второй бункер, где находятся два химика</button>
+          <button id="speccard2">Ты можешь поменять свою карту Профессия на новую из колоды</button>
       </div>
-      <div id="game-smart-button">game-smart-button</div>
+      <div id="game-chat">
+        <textarea rows="10" readonly id="messages" class="messages"></textarea>
+        <div id="senders">
+          <input type="text" name="message" id="message"/>
+          <input value="Отправить" type="button" id="send-button" />
+        </div>
+      </div>
+      <hr />
     </div>
   </div>
   <div id="play-menu" class="hidden">

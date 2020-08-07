@@ -150,7 +150,10 @@ export function processGameUpdate(update) {
     if (!update.speccards[id].used) {
       const button = document.getElementById(`speccard${++speccardN}`);
       button.onclick = () => {
-        useSpeccard(id)
+        console.log(key, id);
+        this.classList.add("hidden");
+        this.disabled = "disabled";
+        useSpeccard(key, id);
       };
       button.innerHTML = update.speccards[id].text;
     }
