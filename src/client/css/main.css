@@ -45,6 +45,7 @@ button:focus {
   border: none;
   background: #DCDCDC;
   float: left;
+  width: 100%;
   text-align: start;
   font-size: 13px;
 }
@@ -193,6 +194,7 @@ button:focus {
   margin: 1%;
   text-align: start;
   border: solid;
+  border-radius: 3px;
 }
 
 #info {

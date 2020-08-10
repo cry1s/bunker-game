@@ -10,12 +10,10 @@ import {
 import {
   useSpeccard,
   openChac,
-  voteSock
+  voteSock,
+  chooseSock
 } from "./networking";
-
-// The "current" state will always be RENDER_DELAY ms behind server time.
-// This makes gameplay smoother and lag less noticeable.
-const RENDER_DELAY = 100;
+const Constants = require('../shared/constants');
 
 const playMenu = document.getElementById('play-menu');
 const roomMenu = document.getElementById('room-menu');
@@ -79,11 +77,12 @@ function createPlayerCards(usernames) {
       <div class="chac" id="info${playerN+1}">Доп. информация: *****</div>
       <hr />
       <div class="chac" id="bag${playerN+1}">Багаж: *****</div>
-    </div>
-    <button class="hidden" id="player${playerN+1}-vote-button" style="background-color: red;">ГОЛОСОВАТЬ ПРОТИВ</button>
+    </div> <hr />
+    <button class="hidden" id="player${playerN+1}-vote-button" style="background-color: red; width: 100%">ГОЛОСОВАТЬ ПРОТИВ</button> <hr />
+    <button class="hidden" id="player${playerN+1}-choose-button" style="background-color: limegreen; width: 100%">ВЫБРАТЬ</button> <hr />
     <h4>#${playerN+1} ${usernames[playerN]}</h4>
     </div>`;
-    document.getElementById(`player${playerN+1}-vote-button`).onclick = () => voteAgainst(playerN + 1);
+    document.getElementById(`player${playerN+1}-vote-button`).onclick = (() => voteAgainst(playerN + 1));
   }
 }
 
@@ -98,6 +97,26 @@ function voteAgainst(n) {
     document.getElementById(`player${i+1}-vote-button`).classList.add("hidden");
   }
   voteSock(key, n);
+}
+
+function chooseAPlayer(n) {
+  console.log("Отправляю выбор", key, n);
+  for (let i = 0; i < amountPlayers; i++) {
+    document.getElementById(`player${i+1}-choose-button`).classList.add("hidden");
+    if (i+1 == me) continue;
+    const chacsE = [
+      document.getElementById(`job${i+1}`),
+      document.getElementById(`health${i+1}`),
+      document.getElementById(`bio${i+1}`),
+      document.getElementById(`hobby${i+1}`),
+      document.getElementById(`feel${i+1}`),
+      document.getElementById(`fobia${i+1}`),
+      document.getElementById(`info${i+1}`),
+      document.getElementById(`bag${i+1}`),
+    ];
+    chacsE.forEach(chac => chac.onclick = "");
+  }
+  chooseSock(key, String(n));
 }
 
 function setColorsForChacs() {
@@ -147,16 +166,14 @@ export function processGameUpdate(update) {
   }
   let speccardN = 0;
   for (let id in update.speccards) {
-    if (!update.speccards[id].used) {
-      const button = document.getElementById(`speccard${++speccardN}`);
-      button.onclick = () => {
-        console.log(key, id);
-        this.classList.add("hidden");
-        this.disabled = "disabled";
-        useSpeccard(key, id);
-      };
-      button.innerHTML = update.speccards[id].text;
-    }
+    const button = document.getElementById(`speccard${++speccardN}`);
+    button.onclick = () => {
+      console.log(key, id);
+      button.classList.add("hidden");
+      button.disabled = "disabled";
+      useSpeccard(key, id);
+    };
+    button.innerHTML = update.speccards[id].text;
   }
   if (!chat) {
     chat = new Chat(key, myUsername);
@@ -227,4 +244,47 @@ export function dialogMessage(msg) {
 
 export function justificationStarted(username) {
   dialog.showMessage("Внимание, оправдывается " + username + "!");
+}
+
+export function speccardChooseProc(chooseType) {
+  switch(chooseType) {
+    case Constants.SPECCARD_CHOOSE_TYPE.LIVING_CHACS:
+      for (let i = 0; i < amountPlayers; i++) {
+        if (i+1 == me) continue;
+        const chacsE = [
+          document.getElementById(`job${i+1}`),
+          document.getElementById(`health${i+1}`),
+          document.getElementById(`bio${i+1}`),
+          document.getElementById(`hobby${i+1}`),
+          document.getElementById(`feel${i+1}`),
+          document.getElementById(`fobia${i+1}`),
+          document.getElementById(`info${i+1}`),
+          document.getElementById(`bag${i+1}`),
+        ]
+        chacsE.forEach(chac => {
+          if ( chac.innerHTML.endsWith("*****") ) {
+            chac.onclick = () => chooseAPlayer(chac.id);
+          }
+        });
+      }
+      break;
+    case Constants.SPECCARD_CHOOSE_TYPE.LIVING_EXCEPT_ME:
+      for (let i = 0; i < amountPlayers; i++) {
+        if (i+1 == me) continue;
+        if (!kickedPlayers[i+1]) {
+          document.getElementById(`player${i+1}-choose-button`).onclick = (() => chooseAPlayer(i + 1));
+          document.getElementById(`player${i+1}-choose-button`).classList.remove("hidden");
+        }
+      }
+      break;
+    case Constants.SPECCARD_CHOOSE_TYPE.KICKED:
+      for (let i = 0; i < amountPlayers; i++) {
+        if (i+1 == me) continue;
+        if (kickedPlayers[i+1]) {
+          document.getElementById(`player${i+1}-choose-button`).onclick = (() => chooseAPlayer(i + 1));
+          document.getElementById(`player${i+1}-choose-button`).classList.remove("hidden");
+        }
+      }
+      break;
+  }
 }

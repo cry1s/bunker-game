@@ -34,7 +34,6 @@ module.exports = Object.freeze({
   },
 
   SPECCARD_CHOOSE_TYPE: {
-    ALL: 9,
     LIVING_CHACS: 10,
     LIVING_EXCEPT_ME: 11,
     KICKED: 12,

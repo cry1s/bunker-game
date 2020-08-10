@@ -42,7 +42,8 @@ io.on('connection', socket => {
   socket.on(Constants.MSG_TYPES.OPEN_CHAC, openChac);
   socket.on(Constants.MSG_TYPES.PLAYER_VOTE, playerVote);
   socket.on(Constants.MSG_TYPES.SEND_CHAT_MESSAGE, sendChatMessage);
-  socket.on(Constants.MSG_TYPES.USE_SPECCARD, useSpeccard)
+  socket.on(Constants.MSG_TYPES.USE_SPECCARD, useSpeccard);
+  socket.on(Constants.MSG_TYPES.SPECCARD_CHOOSE_DONE, chooseDone);
   socket.on('disconnect', onDisconnect);
 });
 
@@ -53,6 +54,12 @@ const rooms = {};
 function useSpeccard(key, id) {
   if (rooms.hasOwnProperty(key)) {
     rooms[key].speccardManager.onUseSpeccard(this, id);
+  }
+}
+
+function chooseDone(key, choose) {
+  if (rooms.hasOwnProperty(key)) {
+    rooms[key].speccardManager.onChoose(this, choose);
   }
 }
 
