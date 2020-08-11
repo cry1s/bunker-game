@@ -93,6 +93,17 @@ class Player {
     delete oTypeCards[n];
   }
 
+  needToOpenChacs() {
+    const chacs = ["job", "health", "bio", "hobby", "feel", "fobia", "info", "bag"];
+    for (let i = 0; i < chacs.length; i++) {
+      const chac = chacs[i];
+      if (!this[chac].isOpen) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   genSexOrientAge() {
     this.sex = Math.random() > 0.5 ? "Мужчина" : "Женщина";
     switch (this.randomInt(1, 3)) {
