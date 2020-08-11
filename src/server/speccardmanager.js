@@ -258,12 +258,13 @@ class SpeccardManager {
     // var choose need to be like "1" or "job 1"
     onChoose(socket, choose) {
         const id = this.waitForChoose[socket.id];
-        let chac, i, player;
-        switch (id) {
+        let chac, player, i;
+        switch (Number(id)) {
             case 1:
                 chac = String(choose).split(" ")[0];
                 i = Number(String(choose).split(" ")[1]) - 1;
                 player = this.players[ Object.keys(this.players)[i] ];
+                console.log(player, Object.keys(this.players)[i], chac, i);
                 player.openCard(chac);
                 this.room.shouldSendUpdate = true;
                 this.usedSpeccards.push(id);
@@ -275,6 +276,7 @@ class SpeccardManager {
                 i = Number(choose) - 1;
                 player = this.players[ Object.keys(this.players)[i] ];
                 player.returnToGame();
+                this.room.amountPlayers += 1;
                 this.room.shouldSendUpdate = true;
                 this.usedSpeccards.push(id);
                 break;
@@ -321,7 +323,7 @@ class SpeccardManager {
             // У тебя есть защита на один игровой круг другого игрока,
             // ты не можешь защитить себя
             case 21:
-                let i = Number(choose) - 1;
+                i = Number(choose) - 1;
                 this.room.hacker22 = Object.keys(this.players)[i];
                 this.usedSpeccards.push(id);
                 break;

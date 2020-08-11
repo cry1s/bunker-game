@@ -25,7 +25,7 @@ const gameUpdates = [];
 
 const kickedPlayers = {};
 
-const chacsOpened = {
+let chacsOpened = {
   job: false,
   health: false,
   bio: false,
@@ -142,6 +142,7 @@ export function processGameUpdate(update) {
     const playerChacs = document.getElementById("player" + (1 + playerN) + "-chacs");
     const playerUpdate = update[playerN + 1];
     if (playerUpdate.me) {
+      chacsOpened = playerUpdate.chacsOpened;
       myUsername = playerUpdate.username;
       me = playerN + 1;
       setColorsForChacs();
@@ -169,10 +170,13 @@ export function processGameUpdate(update) {
     const button = document.getElementById(`speccard${++speccardN}`);
     button.onclick = () => {
       console.log(key, id);
-      button.classList.add("hidden");
+      // button.classList.add("hidden");
       button.disabled = "disabled";
       useSpeccard(key, id);
     };
+    if (update.speccards[id].used || update.speccards[id].passive) {
+      button.disabled = "disabled";
+    }
     button.innerHTML = update.speccards[id].text;
   }
   if (!chat) {

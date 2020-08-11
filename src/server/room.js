@@ -194,7 +194,7 @@ class Room {
     for (let nPlayer = 0; nPlayer < keys.length; nPlayer++) {
       const curPlayerID = keys[nPlayer];
       const curPlayer = this.players[curPlayerID];
-      const isOwner = curPlayerID == forPlayerID
+      const isOwner = (curPlayerID == forPlayerID)
       update[nPlayer + 1] = {
         me: isOwner,
         kicked: curPlayer.kicked,
@@ -207,6 +207,16 @@ class Room {
         fobia: this.getChac("fobia", curPlayer, isOwner),
         info: this.getChac("info", curPlayer, isOwner),
         bag: this.getChac("bag", curPlayer, isOwner),
+        chacsOpened: {
+          job: curPlayer.job.isOpen,
+          health: curPlayer.health.isOpen,
+          bio: curPlayer.bio.isOpen,
+          hobby: curPlayer.hobby.isOpen,
+          feel: curPlayer.feel.isOpen,
+          fobia: curPlayer.fobia.isOpen,
+          info: curPlayer.info.isOpen,
+          bag: curPlayer.bag.isOpen,
+        }
       };
       if (isOwner) {
         update.speccards = this.speccardManager.getSpeccardUpdateByIds(curPlayer.speccards.id1, curPlayer.speccards.id2);
