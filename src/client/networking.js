@@ -12,6 +12,7 @@ import {
   justificationStarted,
   chatUpdate,
   speccardChooseProc,
+  gameEnd,
 } from './gamestate';
 import {
   lobbyUpdate
@@ -43,7 +44,8 @@ export const connect = onGameOver => (
     socket.on(Constants.MSG_TYPES.CHANGE_VOTE_STARTED, changeVoteStarted);
     socket.on(Constants.MSG_TYPES.DIALOG_MESSAGE, dialogMessage);
     socket.on(Constants.MSG_TYPES.JUSTIFICATION_STARTED, justificationStarted);
-    socket.on(Constants.MSG_TYPES.SPECCARD_CHOOSE_PROC, speccardChooseProc)
+    socket.on(Constants.MSG_TYPES.SPECCARD_CHOOSE_PROC, speccardChooseProc);
+    socket.on(Constants.MSG_TYPES.GAME_END, gameEnd)
     socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver);
     socket.on('disconnect', () => {
       console.log('Disconnected from server.');

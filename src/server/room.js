@@ -138,7 +138,7 @@ class Room {
             this.hacker22 = null;
             if (this.amountPlayers <= this.amountPlayersToEnd) {
               this.state = Constants.ROOM_STATES.RESULTS;
-              // TODO
+              this.sendUpdateForAll(Constants.MSG_TYPES.GAME_END, this);
             } else {
               this.gameState = Constants.GAME_STATES.OPENING_CHACS;
             }

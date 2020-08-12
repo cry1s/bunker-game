@@ -119,15 +119,21 @@ function chooseAPlayer(n) {
   chooseSock(key, String(n));
 }
 
-function setColorsForChacs() {
-  document.getElementById(`job${me}`).style.backgroundColor = chacsOpened.job ? "yellow" : "skyblue";
-  document.getElementById(`health${me}`).style.backgroundColor = chacsOpened.health ? "yellow" : "skyblue";
-  document.getElementById(`bio${me}`).style.backgroundColor = chacsOpened.bio ? "yellow" : "skyblue";
-  document.getElementById(`hobby${me}`).style.backgroundColor = chacsOpened.hobby ? "yellow" : "skyblue";
-  document.getElementById(`feel${me}`).style.backgroundColor = chacsOpened.feel ? "yellow" : "skyblue";
-  document.getElementById(`fobia${me}`).style.backgroundColor = chacsOpened.fobia ? "yellow" : "skyblue";
-  document.getElementById(`info${me}`).style.backgroundColor = chacsOpened.info ? "yellow" : "skyblue";
-  document.getElementById(`bag${me}`).style.backgroundColor = chacsOpened.bag ? "yellow" : "skyblue";
+function setCfgForChacs() {
+  const chacsE = [
+    document.getElementById(`job${me}`),
+    document.getElementById(`health${me}`),
+    document.getElementById(`bio${me}`),
+    document.getElementById(`hobby${me}`),
+    document.getElementById(`feel${me}`),
+    document.getElementById(`fobia${me}`),
+    document.getElementById(`info${me}`),
+    document.getElementById(`bag${me}`),
+  ];
+  chacsE.forEach(chacE => {
+    const chac = chacE.id.replace(String(me), "");
+    chacE.style.backgroundColor = chacsOpened[chac] ? (chacE.onclick = "", "yellow") : "skyblue";
+  })
 }
 
 export function termsUpdate(terms) {
@@ -145,7 +151,7 @@ export function processGameUpdate(update) {
       chacsOpened = playerUpdate.chacsOpened;
       myUsername = playerUpdate.username;
       me = playerN + 1;
-      setColorsForChacs();
+      setCfgForChacs();
     }
     document.getElementById(`job${playerN+1}`).innerHTML = `Профессия: ${playerUpdate.job}`;
     document.getElementById(`health${playerN+1}`).innerHTML = `Здоровье: ${playerUpdate.health}`;
@@ -264,7 +270,7 @@ export function speccardChooseProc(chooseType) {
           document.getElementById(`fobia${i+1}`),
           document.getElementById(`info${i+1}`),
           document.getElementById(`bag${i+1}`),
-        ]
+        ];
         chacsE.forEach(chac => {
           if ( chac.innerHTML.endsWith("*****") ) {
             chac.onclick = () => chooseAPlayer(chac.id);
