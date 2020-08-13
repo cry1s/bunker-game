@@ -21,8 +21,6 @@ const gameContainer = document.getElementById("game");
 const gamePlayerCards = document.getElementById("game-player-cards");
 const gameTerms = document.getElementById("game-terms");
 
-const gameUpdates = [];
-
 const kickedPlayers = {};
 
 let chacsOpened = {
@@ -171,20 +169,7 @@ export function processGameUpdate(update) {
       playerChacs.classList.remove("hidden");
     }
   }
-  let speccardN = 0;
-  for (let id in update.speccards) {
-    const button = document.getElementById(`speccard${++speccardN}`);
-    button.onclick = () => {
-      console.log(key, id);
-      // button.classList.add("hidden");
-      button.disabled = "disabled";
-      useSpeccard(key, id);
-    };
-    if (update.speccards[id].used || update.speccards[id].passive) {
-      button.disabled = "disabled";
-    }
-    button.innerHTML = update.speccards[id].text;
-  }
+  speccardUpdate(update.speccards);
   if (!chat) {
     chat = new Chat(key, myUsername);
   }
@@ -273,7 +258,7 @@ export function speccardChooseProc(chooseType) {
         ];
         chacsE.forEach(chac => {
           if ( chac.innerHTML.endsWith("*****") ) {
-            chac.onclick = () => chooseAPlayer(chac.id);
+            chac.onclick = () => chooseAPlayer(chac.id.replace(String(i+1), "")+ (i+1));
           }
         });
       }
@@ -296,5 +281,25 @@ export function speccardChooseProc(chooseType) {
         }
       }
       break;
+  }
+}
+
+export function speccardUpdate(update) {
+  console.log(update);
+  let speccardN = 0;
+  for (let id in update) {
+    const button = document.getElementById(`speccard${++speccardN}`);
+    button.onclick = () => {
+      console.log(key, id);
+      // button.classList.add("hidden");
+      button.disabled = "disabled";
+      useSpeccard(key, id);
+    };
+    if (update[id].used) {
+      button.disabled = "disabled";
+    } else {
+      button.disabled = "";
+    }
+    button.innerHTML = update[id].text;
   }
 }

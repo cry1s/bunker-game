@@ -12,6 +12,7 @@ import {
   justificationStarted,
   chatUpdate,
   speccardChooseProc,
+  speccardUpdate,
   gameEnd,
 } from './gamestate';
 import {
@@ -45,6 +46,7 @@ export const connect = onGameOver => (
     socket.on(Constants.MSG_TYPES.DIALOG_MESSAGE, dialogMessage);
     socket.on(Constants.MSG_TYPES.JUSTIFICATION_STARTED, justificationStarted);
     socket.on(Constants.MSG_TYPES.SPECCARD_CHOOSE_PROC, speccardChooseProc);
+    socket.on(Constants.MSG_TYPES.SPECCARD_UPDATE, speccardUpdate)
     socket.on(Constants.MSG_TYPES.GAME_END, gameEnd)
     socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver);
     socket.on('disconnect', () => {

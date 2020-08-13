@@ -1,6 +1,6 @@
 module.exports = Object.freeze({
   MIN_PLAYERS: 4,
-  PASSIVE_IDS: [35, 36],
+  PASSIVE_IDS: [23, 24],
 
   GOOGLE_SPREADSHEET_ID: '1rRKfvFjzKkI5rT6Q7vPANhn1NTAZ-7mPaCmoxgtmVu4',
 

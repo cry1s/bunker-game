@@ -14,7 +14,8 @@ class SpeccardManager {
     }
 
     onUseSpeccard(socket, id) {
-        switch (Number(id)) {
+        id = Number(id);
+        switch (id) {
             // Данная карта дает тебе возможность открыть
             // карту любой категории у любого игрока на выбор 
             case 1:
@@ -221,7 +222,13 @@ class SpeccardManager {
                 this.usedSpeccards.push(id);
                 this.sendUpdate(socket.id);
                 break;
-
+            
+            // Passive cards, just msg about it
+            case 23:
+            case 24:
+                this.room.chat.sendMessageForAll(`Сервер: ИГРОК ${this.players[socket.id].username} ДЕРЖИТ СПЕЦКАРТУ: ${SpeccardManager.cards[id]}`);
+                this.sendUpdate(socket.id);
+                break;
             // карты на плюс правила
             case 25:
             case 27:
@@ -257,9 +264,9 @@ class SpeccardManager {
 
     // var choose need to be like "1" or "job 1"
     onChoose(socket, choose) {
-        const id = this.waitForChoose[socket.id];
+        const id = Number(this.waitForChoose[socket.id]);
         let chac, player, i;
-        switch (Number(id)) {
+        switch (id) {
             case 1:
                 chac = String(choose).split(" ")[0];
                 i = Number(String(choose).split(" ")[1]) - 1;
@@ -332,7 +339,12 @@ class SpeccardManager {
     }
 
     sendUpdate(socketid) {
-        this.sockets[socketid].emit(Constants.MSG_TYPES.SPECCARD_UPDATE)
+        this.sockets[socketid].emit(Constants.MSG_TYPES.SPECCARD_UPDATE, this.createUpdate(socketid))
+    }
+
+    createUpdate(socketid) {
+        const playerSpeccards = this.players[socketid].speccards;
+        return this.getSpeccardUpdateByIds(playerSpeccards.id1, playerSpeccards.id2);
     }
 
     sendChoose(socketid, chooseType) {
@@ -340,19 +352,21 @@ class SpeccardManager {
     }
 
     static isPassive(id) {
-        return Boolean(id in Constants.PASSIVE_IDS);
+        return Boolean(Constants.PASSIVE_IDS.includes(id));
     }
 
     getSpeccardUpdateByIds(id1, id2) {
+        id1 = Number(id1);
+        id2 = Number(id2);
         return {
             [id1]: {
                 passive: SpeccardManager.isPassive(id1),
-                used: (id1 in this.usedSpeccards),
+                used: (this.usedSpeccards.includes(id1)),
                 text: SpeccardManager.cards[id1],
             },
             [id2]: {
                 passive: SpeccardManager.isPassive(id2),
-                used: (id2 in this.usedSpeccards),
+                used: (this.usedSpeccards.includes(id2)),
                 text: SpeccardManager.cards[id2],
             },
         }
