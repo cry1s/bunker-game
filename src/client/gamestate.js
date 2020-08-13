@@ -301,7 +301,7 @@ export function speccardUpdate(update) {
       button.disabled = "disabled";
       useSpeccard(key, id);
     };
-    if (update[id].used) {
+    if (update[id].used || kickedPlayers[me]) {
       button.disabled = "disabled";
     } else {
       button.disabled = "";
