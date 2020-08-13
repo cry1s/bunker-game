@@ -3,7 +3,7 @@ html, body {
   padding: 0;
   overflow: hidden;
   overscroll-behavior: none;
-  background-color: black;
+  background-image: url("/assets/main.jpg");
 }
 
 
@@ -20,6 +20,7 @@ hr {
 button {
   bottom: 0;
   font-size: 18px;
+  font-weight: inherit;
   outline: none;
   border: none;
   color: black;
@@ -43,15 +44,15 @@ button:focus {
 
 .chacs {
   border: none;
-  background: #DCDCDC;
   float: left;
   width: 100%;
   text-align: start;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .chac {
   padding: 2px;
+  font-weight: bold;
   text-decoration: blink;
 }
 
@@ -80,6 +81,8 @@ button:focus {
 
 #game {
   position: absolute;
+  background-image: url("/assets/background.jpg");
+  background-size: 100% 100%;
   bottom: 0;
   right: 0;
   left: 0;
@@ -89,8 +92,9 @@ button:focus {
 }
 
 #game-utils {
+  font-weight: 500;
+  background-color: rgba(255, 255, 255, 0.55);
   overflow: auto;
-  background: #40E0D0;
   margin: auto auto;
   float: right;
   width: 20%;
@@ -102,9 +106,7 @@ button:focus {
 #game-terms {
   height: 40%;
   overflow: auto;
-  border-style: solid;
-  border-color: crimson;
-  border-width: 1rem;
+  border-bottom: solid;
 }
 
 #game-chat {
@@ -181,20 +183,21 @@ button:focus {
   left: 0;
   top: 0;
   height: 100%;
-  background: #FFD700;
   width: 80%;
   float: left;
   overflow: auto;
 }
 
 .player {
+  background-image: url("/assets/card.png");
+  background-size: 100% 100%;
+  background-position: center center;
   height: fit-content;
   width: fit-content;
   float: left;
+  padding: 20px;
   margin: 1%;
   text-align: start;
-  border: solid;
-  border-radius: 3px;
 }
 
 #info {

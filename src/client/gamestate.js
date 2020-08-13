@@ -131,7 +131,7 @@ function setCfgForChacs() {
   ];
   chacsE.forEach(chacE => {
     const chac = chacE.id.replace(String(me), "");
-    chacE.style.backgroundColor = chacsOpened[chac] ? (chacE.onclick = "", "yellow") : "skyblue";
+    chacE.style.textDecoration = chacsOpened[chac] ? (chacE.onclick = "", "underline") : "none";
   })
 }
 
