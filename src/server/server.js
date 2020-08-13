@@ -44,6 +44,7 @@ io.on('connection', socket => {
   socket.on(Constants.MSG_TYPES.SEND_CHAT_MESSAGE, sendChatMessage);
   socket.on(Constants.MSG_TYPES.USE_SPECCARD, useSpeccard);
   socket.on(Constants.MSG_TYPES.SPECCARD_CHOOSE_DONE, chooseDone);
+  socket.on(Constants.MSG_TYPES.USER_END_JUSTIF, userEndJustif);
   socket.on('disconnect', onDisconnect);
 });
 
@@ -231,4 +232,12 @@ function openChac(key, chac) {
 
 function playerVote(key, voteN) {
   rooms[key].vote(this, voteN-1);
+}
+
+function userEndJustif(key) {
+  if (rooms.hasOwnProperty(key)) {
+    if (rooms[key].electionStage) {
+      rooms[key].electionStage.onUserEndJustiff(this);
+    }
+  }
 }

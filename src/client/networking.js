@@ -10,6 +10,7 @@ import {
   changeVoteStarted,
   dialogMessage,
   justificationStarted,
+  justificationEnded,
   chatUpdate,
   speccardChooseProc,
   speccardUpdate,
@@ -45,6 +46,7 @@ export const connect = onGameOver => (
     socket.on(Constants.MSG_TYPES.CHANGE_VOTE_STARTED, changeVoteStarted);
     socket.on(Constants.MSG_TYPES.DIALOG_MESSAGE, dialogMessage);
     socket.on(Constants.MSG_TYPES.JUSTIFICATION_STARTED, justificationStarted);
+    socket.on(Constants.MSG_TYPES.JUSTIFICATION_ENDED, justificationEnded)
     socket.on(Constants.MSG_TYPES.SPECCARD_CHOOSE_PROC, speccardChooseProc);
     socket.on(Constants.MSG_TYPES.SPECCARD_UPDATE, speccardUpdate)
     socket.on(Constants.MSG_TYPES.GAME_END, gameEnd)
@@ -93,4 +95,8 @@ export const voteSock = (key, n) => {
 
 export const chooseSock = (key, n) => {
   socket.emit(Constants.MSG_TYPES.SPECCARD_CHOOSE_DONE, key, n);
+}
+
+export const endJust = (key) => {
+  socket.emit(Constants.MSG_TYPES.USER_END_JUSTIF, key);
 }

@@ -18,6 +18,7 @@ class ElectionStage {
             }
         }
         this.kicked = 0;
+        this.timer = null;
         this.changingVotes = false;
         this.losers = null;
         this.lastLosers = [];
@@ -48,7 +49,7 @@ class ElectionStage {
             this.room.hacker18 = null;
         } else if (this.currentPlayerNumber >= this.amountOfPlayers) {
             this.election.determineLosers();
-            this.losers = this.election.losersID;
+            this.losers = this.election.losersID.slice();
             if (!this.changingVotes) {
                 this.lastLosers = this.losers.slice(); // copy
                 Object.keys(this.players).forEach(socketId => {
@@ -84,16 +85,26 @@ class ElectionStage {
         Object.keys(this.sockets).forEach(socketId => {
             this.sockets[socketId].emit(Constants.MSG_TYPES.JUSTIFICATION_STARTED, username);
         });
-        setTimeout(this.endJustification.bind(this), 60000);
+        this.timer = setTimeout(this.endJustification.bind(this), Constants.JUSTIFICATION_TIME_SECS * 1000);
     }
 
     endJustification() {
+        Object.keys(this.sockets).forEach(socketId => {
+            this.sockets[socketId].emit(Constants.MSG_TYPES.JUSTIFICATION_ENDED);
+        });
         if (this.losers.length == 0) {
             this.currentPlayerNumber = 0;
             this.changingVotes = true;
             this.sendVoteStarted();
         } else {
             this.startJustification(this.players[this.losers.shift()].username)
+        }
+    }
+
+    onUserEndJustiff(socket) {
+        if (this.election.losersID.includes(socket.id)) {
+            clearTimeout(this.timer);
+            this.endJustification();
         }
     }
     

@@ -11,7 +11,8 @@ import {
   useSpeccard,
   openChac,
   voteSock,
-  chooseSock
+  chooseSock,
+  endJust
 } from "./networking";
 const Constants = require('../shared/constants');
 
@@ -239,6 +240,11 @@ export function dialogMessage(msg) {
 
 export function justificationStarted(username) {
   dialog.showMessage("Внимание, оправдывается " + username + "!");
+  dialog.startJustificationTimer(username == myUsername);
+}
+
+export function justificationEnded() {
+  dialog.onJustEnded();
 }
 
 export function speccardChooseProc(chooseType) {
@@ -302,4 +308,12 @@ export function speccardUpdate(update) {
     }
     button.innerHTML = update[id].text;
   }
+}
+
+export function gameEnd(room) {
+  console.log(room);
+}
+
+export function endJustGameState() {
+  endJust(key);
 }
