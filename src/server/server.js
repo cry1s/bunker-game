@@ -7,6 +7,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet')
 const Constants = require('../shared/constants');
 const Room = require('./room');
 const webpackConfig = require('../../webpack.dev.js');
+const { create } = require('lodash');
 
 // Get values for players chars
 LoadAndSendSpreadsheetData();
@@ -86,6 +87,8 @@ function createRoom(username) {
 function joinRoom(username, key) {
   if (rooms[key] != undefined && rooms[key] != rooms.n) {
     rooms[key].addPlayer(this, username);
+  } else {
+    createRoom.bind(this)(username);
   }
 }
 
@@ -98,8 +101,7 @@ function leaveRoom(key) {
 
 function onDisconnect() {
   for (let key in rooms) {
-    console.log(key);
-    if (this.id in rooms[key].players) {
+    if (rooms.hasOwnProperty(key) && this.id in rooms[key].players) {
       rooms[key].removePlayer(this);
       if (rooms[key].playersIsEmpty()) {
         deleteRoom(key)
@@ -107,7 +109,7 @@ function onDisconnect() {
       break;
     }
   }
-  console.log("Player disconnected by random situation or what idk! "+ this.id)
+  console.log("Player disconnected! "+ this.id)
 }
 
 function getAlphaNumericRandom(len) {
