@@ -79,6 +79,15 @@ class Room {
       delete this.players[socket.id];
       this.amountPlayers--;
       this.sendUpdateForAll(Constants.MSG_TYPES.LOBBY_UPDATE, this.createLobbyUpdate());
+    } else if (this.state == Constants.ROOM_STATES.GAME) {
+      this.players[socket.id].returnable = false;
+      this.players[socket.id].kicked = true;
+      this.amountPlayers--;
+      if (this.gameState == Constants.GAME_STATES.ELECTION) {
+        this.electionStage.onRemovePlayer(socket);
+      } else if (this.gameState == Constants.GAME_STATES.OPENING_CHACS) {
+        this.openChacStage.onRemovePlayer(socket);
+      }
     }
   }
 
@@ -111,8 +120,9 @@ class Room {
           this.shouldSendUpdate = false;
         }
 
-        if (this.gameState != Constants.ROOM_STATES.RESULTS && this.amountPlayers <= this.amountPlayersToEnd) {
+        if (this.state != Constants.ROOM_STATES.RESULTS && this.amountPlayers <= this.amountPlayersToEnd) {
           this.state = Constants.ROOM_STATES.RESULTS;
+          this.gameState = null;
         }
 
         if (this.gameState == Constants.GAME_STATES.OPENING_CHACS && this.openChacStage == null) {

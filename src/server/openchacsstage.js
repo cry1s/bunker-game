@@ -41,6 +41,10 @@ class OpenChacsStage {
             }
         }
     }
+
+    onRemovePlayer(socket) {
+        // TODO
+    }
 }
 
 module.exports = OpenChacsStage;

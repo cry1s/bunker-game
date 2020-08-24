@@ -176,6 +176,15 @@ class ElectionStage {
     getResult() {
         return this.kicked;
     }
+
+    onRemovePlayer(socket) {
+        const curSock = this.notKickedSockets[this.currentPlayerNumber];
+        if (curSock == socket) {
+            //TODO
+        } else {
+            //TODO
+        }
+    }
 }
 
 module.exports = ElectionStage

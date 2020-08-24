@@ -10,6 +10,7 @@ class Player {
       this.username = socketId;
     }
     this.kicked = false;
+    this.returnable = true;
     this.ready = false;
 
     this.sex = null;          //
