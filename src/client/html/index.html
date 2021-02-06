@@ -22,6 +22,11 @@
 
     gtag('config', 'UA-58664433-3');
   </script>
+  <script type="text/javascript">
+    function toggle_show(id) {
+      document.getElementById(id).style.display = document.getElementById(id).style.display == 'none' ? 'block' : 'none';
+    }
+  </script>
 </head>
 
 <body>
@@ -95,18 +100,24 @@
     <hr />
     <p>
       <!-- <br /> -->
-      Read the tutorial: <a href="https://victorzhou.com/blog/build-an-io-game-part-1/" target="_blank">How to Build an
-        .io Game</a>.
+      Для игры необходимо минимум 4 человека</a>.
       <br />
-      See the source code on <a href="https://github.com/vzhou842/example-.io-game" target="_blank">Github</a>.
+      <button onClick="toggle_show('rulesrules')">Краткие правила</button>
+        <ul id="rulesrules" style="display: none">
+            Цель игры для игрока – остаться в убежище, созданном, чтобы пережить обозначенную в начале игры катастрофу. В этом бункере места на всех не хватит. Задача игрока - убедить остальных в нужности своего персонажа. В начале игры каждому выдается карточка персонажа, в которой хранится информация о профессии, здоровье, возрасте, хобби, багаже, фобии, а также указаны пол и дополнительная информация. Кроме того каждый игрок имеет две специальные карты, которые, например, могут защитить его от изгнания на один круг игры или дать возможность поменяться характеристикой с другим игроком.
+Круг игры состоит из двух этапов: 
+раскрытие характеристик и убеждение остальных в том, что именно эти характеристики необходимы для выживания человечества в сложившейся ситуации;
+голосование за изгнание из убежища.
+Для присоединения к комнате введите номер бункера
+        </ul>
       <br />
-      Created by <a href="https://victorzhou.com">Victor Zhou</a>.
+      Основано на проекте <a href="https://victorzhou.com">Victor Zhou</a>
     </p>
     <hr />
     <input type="text" id="username-input" placeholder="Username" />
     <input type="text" id="room-code-input" placeholder="Room" />
-    <button id="join-room-button">JOIN ROOM</button>
-    <button id="create-room-button">CREATE ROOM</button>
+    <button id="join-room-button">Присоединиться</button>
+    <button id="create-room-button">Создать лобби</button>
 
   </div>
   <div id="room-menu" class="hidden">
@@ -115,15 +126,15 @@
       Игроки:
     </p>
     <hr />
-    <button id="room-ready-button">READY</button>
+    <button id="room-ready-button">ГОТОВ!</button>
     <hr />
-    <button id="leave-room-button" value="">LEAVE ROOM</button>
+    <button id="leave-room-button" value="">Покинуть комнату</button>
   </div>
   <div id="disconnect-modal" class="hidden">
     <div>
       <h2>Отлючен от сервера</h2>
       <hr />
-      <button id="reconnect-button">RECONNECT</button>
+      <button id="reconnect-button">Переподключиться</button>
     </div>
   </div>
   <div id="dialog" class="hidden">

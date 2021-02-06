@@ -28,8 +28,8 @@ Promise.all([
     roomMenu.classList.remove('hidden');
   };
   joinRoomButton.onclick = () => {
-    // Play!
-    joinRoom(usernameInput.value, roomCodeInput.value);
+    let roomCode = (roomCodeInput.value.startsWith("№") ? roomCodeInput.value.slice(1) : roomCodeInput.value)
+    joinRoom(usernameInput.value, roomCode);
     playMenu.classList.add('hidden');
     roomMenu.classList.remove('hidden');
   };

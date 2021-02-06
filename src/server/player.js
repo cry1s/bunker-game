@@ -107,21 +107,21 @@ class Player {
 
   genSexOrientAge() {
     this.sex = Math.random() > 0.5 ? "Мужчина" : "Женщина";
-    switch (this.randomInt(1, 3)) {
-      case 2:
-        this.orientation = "Бисексуал";
-        break;
-      case 3:
-        this.orientation = this.sex == "Мужчина" ? "Гомо" : "Лесби";
-        break;
-    }
+    // switch (this.randomInt(1, 3)) {
+    //   case 2:
+    //     this.orientation = "Бисексуал";
+    //     break;
+    //   case 3:
+    //     this.orientation = this.sex == "Мужчина" ? "Гомо" : "Лесби";
+    //     break;
+    // }
     this.age = this.randomInt(18, 86);
   }
 
   makeBioCard() {
     this.genSexOrientAge();
     let text = this.sex;
-    if (this.orientation) text += "-" + this.orientation;
+    // if (this.orientation) text += "-" + this.orientation;
     text += (" " + this.age + " лет");
 
     let isOpen = this.bio === null ? false : this.bio.isOpen;

@@ -18,13 +18,13 @@ hr {
 }
 
 button {
+  border: none;
   bottom: 0;
   font-size: 18px;
   font-weight: inherit;
   outline: none;
-  border: none;
   color: black;
-  background-color: transparent;
+  background-color: lightgrey;
   padding: 5px 20px;
   border-radius: 3px;
   transition: background-color 0.2s ease;
