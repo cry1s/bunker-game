@@ -3,7 +3,7 @@ module.exports = Object.freeze({
   PASSIVE_IDS: [23, 24],
   JUSTIFICATION_TIME_SECS: 60,
 
-  GOOGLE_SPREADSHEET_ID: '1rRKfvFjzKkI5rT6Q7vPANhn1NTAZ-7mPaCmoxgtmVu4',
+  GOOGLE_SPREADSHEET_ID: '1d8hfNncjTuSiud6XFQ4oeX8zm5fs_bUhvbmjGlFDqK4',
 
   MSG_TYPES: {
     JOIN_ROOM: 'join_room',
