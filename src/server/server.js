@@ -7,7 +7,9 @@ const { GoogleSpreadsheet } = require('google-spreadsheet')
 const Constants = require('../shared/constants');
 const Room = require('./room');
 const webpackConfig = require('../../webpack.dev.js');
-const { create } = require('lodash');
+const { JWT } = require('google-auth-library')
+
+require('dotenv').config()
 
 // Get values for players chars
 LoadAndSendSpreadsheetData();
@@ -149,8 +151,14 @@ async function LoadAndSendSpreadsheetData() {
     bunkerSize: [],
     specRooms: [],
   }
-  const doc = new GoogleSpreadsheet(Constants.GOOGLE_SPREADSHEET_ID);
-  doc.useServiceAccountAuth(require('./BunkerGame-bcc41d95122e.json'));
+
+  const serviceAccountAuth = new JWT({
+    email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+    key: process.env.GOOGLE_PRIVATE_KEY.split(String.raw`\n`).join('\n'),
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
+
+  const doc = new GoogleSpreadsheet(Constants.GOOGLE_SPREADSHEET_ID, serviceAccountAuth);
   await doc.loadInfo();
   const sheet = doc.sheetsByIndex[0];
   const sheet2 = doc.sheetsByIndex[1];

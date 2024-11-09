@@ -3,7 +3,7 @@ html, body {
   padding: 0;
   overflow: hidden;
   overscroll-behavior: none;
-  background-image: url("/assets/main.jpg");
+  background-image: url("../../../public/assets/main.jpg");
 }
 
 
@@ -81,7 +81,7 @@ button:focus {
 
 #game {
   position: absolute;
-  background-image: url("/assets/background.jpg");
+  background-image: url("../../../public/assets/background.jpg");
   background-size: 100% 100%;
   bottom: 0;
   right: 0;
@@ -189,7 +189,7 @@ button:focus {
 }
 
 .player {
-  background-image: url("/assets/card.png");
+  background-image: url("../../../public/assets/card.png");
   background-size: 100% 100%;
   background-position: center center;
   height: fit-content;
